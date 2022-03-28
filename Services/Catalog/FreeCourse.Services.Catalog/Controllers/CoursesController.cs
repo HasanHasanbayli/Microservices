@@ -7,7 +7,7 @@ namespace FreeCourse.Services.Catalog.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-internal class CoursesController : CustomBaseController
+public class CoursesController : CustomBaseController
 {
     private readonly ICourseService _courseService;
 
