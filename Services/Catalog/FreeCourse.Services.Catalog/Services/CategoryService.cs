@@ -7,14 +7,13 @@ using MongoDB.Driver;
 
 namespace FreeCourse.Services.Catalog.Services;
 
-public class CategoryService:ICategoryService
+public class CategoryService : ICategoryService
 {
     private readonly IMongoCollection<Category> _categoryCollection;
 
     private readonly IMapper _mapper;
 
-    public CategoryService(IMongoCollection<Category> categoryCollection, IMapper mapper,
-        IDataBaseSettings dataBaseSettings)
+    public CategoryService(IMapper mapper, IDataBaseSettings dataBaseSettings)
     {
         var client = new MongoClient(dataBaseSettings.ConnectionString);
 
@@ -34,9 +33,9 @@ public class CategoryService:ICategoryService
     public async Task<Response<CategoryDTO>> CreateAsync(CategoryDTO categoryDto)
     {
         var category = _mapper.Map<Category>(categoryDto);
-        
+
         await _categoryCollection.InsertOneAsync(category);
- 
+
         return Response<CategoryDTO>.Success(_mapper.Map<CategoryDTO>(category), 200);
     }
 
