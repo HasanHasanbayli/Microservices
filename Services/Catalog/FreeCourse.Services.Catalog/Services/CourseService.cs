@@ -7,23 +7,18 @@ using MongoDB.Driver;
 
 namespace FreeCourse.Services.Catalog.Services;
 
-public class CourseService:ICourseService
+public class CourseService : ICourseService
 {
     private readonly IMongoCollection<Course> _courseCollection;
     private readonly IMongoCollection<Category> _categoryCollection;
-
     private readonly IMapper _mapper;
 
     public CourseService(IMapper mapper, IDataBaseSettings dataBaseSettings)
     {
         var client = new MongoClient(dataBaseSettings.ConnectionString);
-
         var database = client.GetDatabase(dataBaseSettings.DatabaseName);
-
         _courseCollection = database.GetCollection<Course>(dataBaseSettings.CourseCollectionName);
-
-        _categoryCollection = database.GetCollection<Category>(dataBaseSettings.CourseCollectionName);
-
+        _categoryCollection = database.GetCollection<Category>(dataBaseSettings.CategoryCollectionName);
         _mapper = mapper;
     }
 
@@ -35,7 +30,7 @@ public class CourseService:ICourseService
         {
             foreach (var course in courses)
             {
-                course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstAsync();
+                course.Category = await _categoryCollection.Find(x => x.Id == course.CategoryId).FirstAsync();
             }
         }
         else
@@ -49,6 +44,7 @@ public class CourseService:ICourseService
     public async Task<Response<CourseDTO>> GetByIdAsync(string id)
     {
         var course = await _courseCollection.Find<Course>(x => x.Id == id).FirstOrDefaultAsync();
+        
         if (course == null)
         {
             return Response<CourseDTO>.Fail("Course not found", 404);
@@ -84,6 +80,7 @@ public class CourseService:ICourseService
         var newCourse = _mapper.Map<Course>(courseCreateDto);
 
         newCourse.CreatedDate = DateTime.Now;
+
         await _courseCollection.InsertOneAsync(newCourse);
 
         return Response<CourseDTO>.Success(_mapper.Map<CourseDTO>(newCourse), 200);
@@ -95,23 +92,17 @@ public class CourseService:ICourseService
 
         var result = await _courseCollection.FindOneAndReplaceAsync(x => x.Id == courseUpdateDto.Id, updateCourse);
 
-        if (result == null)
-        {
-            return Response<NoContent>.Fail("Course not found", 404);
-        }
-
-        return Response<NoContent>.Success(204);
+        return result == null
+            ? Response<NoContent>.Fail("Course not found", 404)
+            : Response<NoContent>.Success(204);
     }
 
     public async Task<Response<NoContent>> DeleteAsync(string id)
     {
         var result = await _courseCollection.DeleteOneAsync(x => x.Id == id);
 
-        if (result.DeletedCount > 0)
-        {
-            return Response<NoContent>.Success(204);
-        }
-
-        return Response<NoContent>.Fail("Course not found", 404);
+        return result.DeletedCount > 0
+            ? Response<NoContent>.Success(204)
+            : Response<NoContent>.Fail("Course not found", 404);
     }
 }

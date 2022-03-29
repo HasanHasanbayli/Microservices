@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FreeCourse.Services.Catalog.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class CategoriesController : CustomBaseController
 {
     private readonly ICategoryService _categoryService;
@@ -31,11 +31,11 @@ public class CategoriesController : CustomBaseController
 
         return CreateActionResultInstance(category);
     }
-    
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Create(CategoryDTO categoryDto)
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CategoryCreateDTO categoryCreateDto)
     {
-        var response = await _categoryService.CreateAsync(categoryDto);
+        var response = await _categoryService.CreateAsync(categoryCreateDto);
 
         return CreateActionResultInstance(response);
     }

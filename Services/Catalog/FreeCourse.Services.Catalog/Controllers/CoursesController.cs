@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace FreeCourse.Services.Catalog.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class CoursesController : CustomBaseController
 {
     private readonly ICourseService _courseService;
 
-    internal CoursesController(ICourseService courseService)
+    public CoursesController(ICourseService courseService)
     {
         _courseService = courseService;
     }
@@ -32,7 +32,8 @@ public class CoursesController : CustomBaseController
         return CreateActionResultInstance(response);
     }
 
-    [Route("/api[controller]/GetAllByUserId/{userId}")]
+    [HttpGet]
+    [Route("/api/v1/[controller]/GetAllByUserId/{userId}")]
     public async Task<IActionResult> GetAllByUserId(string userId)
     {
         var response = await _courseService.GetAllByUserId(userId);
@@ -56,8 +57,8 @@ public class CoursesController : CustomBaseController
         return CreateActionResultInstance(response);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> Update(string id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
     {
         var response = await _courseService.DeleteAsync(id);
 

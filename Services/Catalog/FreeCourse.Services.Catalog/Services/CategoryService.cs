@@ -10,15 +10,12 @@ namespace FreeCourse.Services.Catalog.Services;
 public class CategoryService : ICategoryService
 {
     private readonly IMongoCollection<Category> _categoryCollection;
-
     private readonly IMapper _mapper;
 
     public CategoryService(IMapper mapper, IDataBaseSettings dataBaseSettings)
     {
         var client = new MongoClient(dataBaseSettings.ConnectionString);
-
         var database = client.GetDatabase(dataBaseSettings.DatabaseName);
-
         _categoryCollection = database.GetCollection<Category>(dataBaseSettings.CategoryCollectionName);
         _mapper = mapper;
     }
@@ -30,9 +27,9 @@ public class CategoryService : ICategoryService
         return Response<List<CategoryDTO>>.Success(_mapper.Map<List<CategoryDTO>>(categories), 200);
     }
 
-    public async Task<Response<CategoryDTO>> CreateAsync(CategoryDTO categoryDto)
+    public async Task<Response<CategoryDTO>> CreateAsync(CategoryCreateDTO categoryCreateDto)
     {
-        var category = _mapper.Map<Category>(categoryDto);
+        var category = _mapper.Map<Category>(categoryCreateDto);
 
         await _categoryCollection.InsertOneAsync(category);
 
@@ -43,11 +40,8 @@ public class CategoryService : ICategoryService
     {
         var category = await _categoryCollection.Find<Category>(x => x.Id == id).FirstOrDefaultAsync();
 
-        if (category == null)
-        {
-            return Response<CategoryDTO>.Fail("Category not found", 404);
-        }
-
-        return Response<CategoryDTO>.Success(_mapper.Map<CategoryDTO>(category), 200);
+        return category == null
+            ? Response<CategoryDTO>.Fail("Category not found", 404)
+            : Response<CategoryDTO>.Success(_mapper.Map<CategoryDTO>(category), 200);
     }
 }

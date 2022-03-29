@@ -14,5 +14,7 @@ public class GeneralMapping : Profile
 
         CreateMap<Course, CourseCreateDTO>().ReverseMap();
         CreateMap<Course, CourseUpdateDTO>().ReverseMap();
+
+        CreateMap<Category, CategoryCreateDTO>().ReverseMap();
     }
 }
