@@ -1,5 +1,7 @@
+﻿using FreeCourse.IdentityServer;
 using FreeCourse.IdentityServer.Data;
 using FreeCourse.IdentityServer.Models;
+using IdentityServer4;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,57 +9,60 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
-services.AddControllers();
-
-services.AddEndpointsApiExplorer();
-
-services.AddSwaggerGen();
+services.AddControllersWithViews();
 
 services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 
 services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+var identityServerBuilder = services.AddIdentityServer(options =>
+    {
+        options.Events.RaiseErrorEvents = true;
+        options.Events.RaiseInformationEvents = true;
+        options.Events.RaiseFailureEvents = true;
+        options.Events.RaiseSuccessEvents = true;
+
+        // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
+        options.EmitStaticAudienceClaim = true;
+    })
+    .AddInMemoryIdentityResources(Config.IdentityResources)
+    .AddInMemoryApiScopes(Config.ApiScopes)
+    .AddInMemoryClients(Config.Clients)
+    .AddAspNetIdentity<ApplicationUser>();
+
+identityServerBuilder.AddDeveloperSigningCredential();
+
+services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+        // register your IdentityServer with Google at https://console.developers.google.com
+        // enable the Google+ API
+        // set the redirect URI to https://localhost:5001/signin-google
+        options.ClientId = "copy client ID from Google here";
+        options.ClientSecret = "copy client secret from Google here";
+    });
+
 WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+    app.UseDatabaseErrorPage();
 }
 
-try
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var serviceProvider = scope.ServiceProvider;
+app.UseStaticFiles();
 
-        var applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+app.UseRouting();
 
-        applicationDbContext.Database.Migrate();
-
-        var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-        if (!userManager.Users.Any())
-        {
-            userManager.CreateAsync(new ApplicationUser
-                    {UserName = "HasanHasanbayli", Email = "HasanHasanbeyli@gmail.com", City = "Baku"}, "Password123@")
-                .Wait();
-        }
-    }
-}
-catch (Exception e)
-{
-    Console.WriteLine(e);
-}
-
-app.UseHttpsRedirection();
+app.UseIdentityServer();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
 
 app.Run();

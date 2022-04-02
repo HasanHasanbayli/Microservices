@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace FreeCourse.IdentityServer.Models;
-
-public class ApplicationUser : IdentityUser
+namespace FreeCourse.IdentityServer.Models
 {
-    public string City { get; set; }
+    // Add profile data for application users by adding properties to the ApplicationUser class
+    public class ApplicationUser : IdentityUser
+    {
+    }
 }
