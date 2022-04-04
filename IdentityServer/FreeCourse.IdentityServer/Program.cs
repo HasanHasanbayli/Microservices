@@ -12,7 +12,7 @@ IConfiguration configuration = builder.Configuration;
 services.AddControllersWithViews();
 
 services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -24,8 +24,6 @@ var identityServerBuilder = services.AddIdentityServer(options =>
         options.Events.RaiseInformationEvents = true;
         options.Events.RaiseFailureEvents = true;
         options.Events.RaiseSuccessEvents = true;
-
-        // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
         options.EmitStaticAudienceClaim = true;
     })
     .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -39,10 +37,6 @@ services.AddAuthentication()
     .AddGoogle(options =>
     {
         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-        // register your IdentityServer with Google at https://console.developers.google.com
-        // enable the Google+ API
-        // set the redirect URI to https://localhost:5001/signin-google
         options.ClientId = "copy client ID from Google here";
         options.ClientSecret = "copy client secret from Google here";
     });
@@ -60,6 +54,33 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseIdentityServer();
+
+try
+{
+     using (var scope = app.Services.CreateScope())
+     {
+         var serviceProvider = scope.ServiceProvider;
+
+         var applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+         applicationDbContext.Database.Migrate();
+
+         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+         if (!userManager.Users.Any())
+         {
+             userManager.CreateAsync(new ApplicationUser
+             {
+                 UserName = "hasanhasanbayli", FirstName = "Hasan", LastName = "Hasanbayli",
+                 Email = "hasanhasanbeyli@gmail.com"
+             }, "Password12*").Wait();
+         }
+     }
+}
+catch (Exception e)
+{
+     Console.WriteLine(e);
+}
 
 app.UseAuthorization();
 
