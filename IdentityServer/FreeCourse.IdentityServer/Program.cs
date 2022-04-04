@@ -27,6 +27,7 @@ var identityServerBuilder = services.AddIdentityServer(options =>
         options.EmitStaticAudienceClaim = true;
     })
     .AddInMemoryIdentityResources(Config.IdentityResources)
+    .AddInMemoryApiResources(Config.ApiResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
     .AddInMemoryClients(Config.Clients)
     .AddAspNetIdentity<ApplicationUser>();
@@ -57,29 +58,29 @@ app.UseIdentityServer();
 
 try
 {
-     using (var scope = app.Services.CreateScope())
-     {
-         var serviceProvider = scope.ServiceProvider;
+    using (var scope = app.Services.CreateScope())
+    {
+        var serviceProvider = scope.ServiceProvider;
 
-         var applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+        var applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-         applicationDbContext.Database.Migrate();
+        applicationDbContext.Database.Migrate();
 
-         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-         if (!userManager.Users.Any())
-         {
-             userManager.CreateAsync(new ApplicationUser
-             {
-                 UserName = "hasanhasanbayli", FirstName = "Hasan", LastName = "Hasanbayli",
-                 Email = "hasanhasanbeyli@gmail.com"
-             }, "Password12*").Wait();
-         }
-     }
+        if (!userManager.Users.Any())
+        {
+            userManager.CreateAsync(new ApplicationUser
+            {
+                UserName = "hasanhasanbayli", FirstName = "Hasan", LastName = "Hasanbayli",
+                Email = "hasanhasanbeyli@gmail.com"
+            }, "Password12*").Wait();
+        }
+    }
 }
 catch (Exception e)
 {
-     Console.WriteLine(e);
+    Console.WriteLine(e);
 }
 
 app.UseAuthorization();

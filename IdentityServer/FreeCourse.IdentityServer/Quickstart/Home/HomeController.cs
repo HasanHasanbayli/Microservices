@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using FreeCourse.IdentityServer.Quickstart;
+using FreeCourse.IdentityServer.Quickstart.Home;
 
 namespace IdentityServerHost.Quickstart.UI
 {
