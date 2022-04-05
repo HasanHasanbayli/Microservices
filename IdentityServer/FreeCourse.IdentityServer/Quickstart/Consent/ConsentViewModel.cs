@@ -1,5 +1,4 @@
-﻿using IdentityServerHost.Quickstart.UI;
-
+﻿
 namespace FreeCourse.IdentityServer.Quickstart.Consent;
 
 public class ConsentViewModel : ConsentInputModel

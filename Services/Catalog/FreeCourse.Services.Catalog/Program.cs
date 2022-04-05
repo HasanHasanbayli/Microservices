@@ -1,14 +1,24 @@
 using FreeCourse.Services.Catalog.Services;
 using FreeCourse.Services.Catalog.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
-// Add services to the container.
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.Authority = configuration["IdentityServerUrl"];
+    options.Audience = "resource_catalog";
+    options.RequireHttpsMetadata = false;
+});
 
-services.AddControllers();
+services.AddControllers(options =>
+{
+    options.Filters.Add(new AuthorizeFilter());
+});
 
 services.AddEndpointsApiExplorer();
 
@@ -26,7 +36,6 @@ services.AddSingleton<IDataBaseSettings>(sp =>
 
 WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

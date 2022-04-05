@@ -9,6 +9,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
+services.AddLocalApiAuthentication();
+
 services.AddControllersWithViews();
 
 services.AddDbContext<ApplicationDbContext>(options =>
@@ -84,6 +86,8 @@ catch (Exception e)
 }
 
 app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
 

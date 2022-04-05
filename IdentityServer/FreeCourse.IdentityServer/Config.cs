@@ -22,7 +22,7 @@ public static class Config
         new ApiScope[]
         {
             new ApiScope("catalog_full_permission", "Full access for catalog API"),
-            new ApiScope("catalog_full_permission", "Full access for Photo Stock API"),
+            new ApiScope("photo_stock_full_permission", "Full access for Photo Stock API"),
             new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -36,7 +36,7 @@ public static class Config
                 ClientSecrets = {new Secret("secret".Sha256())},
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AllowedScopes =
-                    {"catalog_full_permission", "catalog_full_permission", IdentityServerConstants.LocalApi.ScopeName}
+                    {"catalog_full_permission", "photo_stock_full_permission", IdentityServerConstants.LocalApi.ScopeName}
             }
         };
 }
