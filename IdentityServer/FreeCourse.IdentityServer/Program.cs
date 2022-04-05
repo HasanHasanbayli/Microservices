@@ -1,6 +1,7 @@
 ﻿using FreeCourse.IdentityServer;
 using FreeCourse.IdentityServer.Data;
 using FreeCourse.IdentityServer.Models;
+using FreeCourse.IdentityServer.Services;
 using IdentityServer4;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,8 @@ var identityServerBuilder = services.AddIdentityServer(options =>
     .AddInMemoryClients(Config.Clients)
     .AddAspNetIdentity<ApplicationUser>();
 
+identityServerBuilder.AddResourceOwnerValidator<IdentityResourceOwnerPasswordValidator>();
+
 identityServerBuilder.AddDeveloperSigningCredential();
 
 services.AddAuthentication()
@@ -57,6 +60,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseIdentityServer();
+
+#region User Seed Data In Project Startup
 
 try
 {
@@ -84,6 +89,8 @@ catch (Exception e)
 {
     Console.WriteLine(e);
 }
+
+#endregion
 
 app.UseAuthorization();
 
