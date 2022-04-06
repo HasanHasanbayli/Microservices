@@ -16,6 +16,11 @@ public static class Config
     public static IEnumerable<IdentityResource> IdentityResources =>
         new IdentityResource[]
         {
+            new IdentityResources.Email(),
+            new IdentityResources.OpenId(),
+            new IdentityResources.Profile(),
+            new IdentityResource()
+                {Name = "roles", DisplayName = "Roles", Description = "User roles", UserClaims = new[] {"role"}}
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -36,7 +41,27 @@ public static class Config
                 ClientSecrets = {new Secret("secret".Sha256())},
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AllowedScopes =
-                    {"catalog_full_permission", "photo_stock_full_permission", IdentityServerConstants.LocalApi.ScopeName}
+                {
+                    "catalog_full_permission", "photo_stock_full_permission", IdentityServerConstants.LocalApi.ScopeName
+                }
+            },
+
+            new Client
+            {
+                ClientName = "Asp.Net Core MVC",
+                ClientId = "WebMvcClientForUser",
+                AllowOfflineAccess = true,
+                ClientSecrets = {new Secret("secret".Sha256())},
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AllowedScopes =
+                {
+                    IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OfflineAccess,
+                },
+                AccessTokenLifetime = 1 * 60 * 60,
+                RefreshTokenExpiration = TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime = (int) (DateTime.Now.AddDays(60) - DateTime.Now).TotalSeconds,
+                RefreshTokenUsage = TokenUsage.ReUse
             }
         };
 }
