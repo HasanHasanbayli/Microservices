@@ -56,7 +56,9 @@ public static class Config
                 AllowedScopes =
                 {
                     IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OfflineAccess,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OfflineAccess, IdentityServerConstants.LocalApi.ScopeName,
+                    "roles"
                 },
                 AccessTokenLifetime = 1 * 60 * 60,
                 RefreshTokenExpiration = TokenExpiration.Absolute,

@@ -5,6 +5,7 @@ using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace FreeCourse.IdentityServer.Controllers;
 
@@ -34,10 +35,29 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, registerDto.Password);
 
         if (!result.Succeeded)
-        {
             return BadRequest(Response<NoContent>.Fail(result.Errors.Select(x => x.Description).ToList(), 400));
-        }
 
         return NoContent();
+    }
+
+    [HttpGet("getuser")]
+    public async Task<IActionResult> GetUser()
+    {
+        var userClaim = User.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub);
+
+        if (userClaim == null)
+            return BadRequest();
+
+        var user = await _userManager.FindByIdAsync(userClaim.Value);
+
+        if (user == null)
+            return BadRequest();
+
+
+        return Ok(new
+        {
+            Id = user.Id, UserName = user.UserName, Email = user.Email, FirstName = user.FirstName,
+            LastName = user.LastName
+        });
     }
 }
