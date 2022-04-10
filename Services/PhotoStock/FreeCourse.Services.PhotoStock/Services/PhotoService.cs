@@ -12,7 +12,7 @@ public class PhotoService : IPhotoService
         
         var fileName = Guid.NewGuid() + photo.FileName;
 
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\photos", fileName);
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", fileName);
 
         await using var stream = new FileStream(path, FileMode.Create);
 
@@ -27,7 +27,7 @@ public class PhotoService : IPhotoService
 
     public async Task<Response<NoContent>> PhotoDelete(string photoUrl)
     {
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\photos", photoUrl);
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", photoUrl);
 
         if (!File.Exists(path))
             return await Task.FromResult(Response<NoContent>.Fail("photo not found", 404));
