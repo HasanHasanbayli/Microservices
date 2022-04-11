@@ -4,9 +4,9 @@ namespace FreeCourse.Shared.Services;
 
 public class SharedIdentityService : ISharedIdentityService
 {
-    private HttpContextAccessor _httpContextAccessor;
+    private IHttpContextAccessor _httpContextAccessor;
 
-    public SharedIdentityService(HttpContextAccessor httpContextAccessor)
+    public SharedIdentityService(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }

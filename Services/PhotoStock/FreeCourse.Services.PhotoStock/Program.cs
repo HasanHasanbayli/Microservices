@@ -10,7 +10,7 @@ IConfiguration configuration = builder.Configuration;
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Authority = configuration["IdentityServerUrl"];
-    options.Audience = "photo_stock_catalog";
+    options.Audience = "resource_photo_stock";
     options.RequireHttpsMetadata = false;
 });
 
