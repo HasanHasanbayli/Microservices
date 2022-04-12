@@ -2,4 +2,5 @@ Services
     -catalogAPI=> 5011
     -photoStockApi=>5012
     -basketApi=>5013
+    -discountApi=>5014
 IdentityServer=> 5001

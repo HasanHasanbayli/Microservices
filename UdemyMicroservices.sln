@@ -30,6 +30,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basket", "Basket", "{F179E8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeCourse.Services.Basket", "Services\Basket\FreeCourse.Services.Basket\FreeCourse.Services.Basket.csproj", "{7637831B-6B0C-47FE-9A4D-9C8613089154}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discount", "Discount", "{BC4E7FEC-5908-484E-B5A3-7B6E95FA2AEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeCourse.Services.Discount", "Services\Discount\FreeCourse.Services.Discount\FreeCourse.Services.Discount.csproj", "{BD28436B-DB83-4B05-881E-CE78DD0F598E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +60,10 @@ Global
 		{7637831B-6B0C-47FE-9A4D-9C8613089154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7637831B-6B0C-47FE-9A4D-9C8613089154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7637831B-6B0C-47FE-9A4D-9C8613089154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD28436B-DB83-4B05-881E-CE78DD0F598E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD28436B-DB83-4B05-881E-CE78DD0F598E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD28436B-DB83-4B05-881E-CE78DD0F598E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD28436B-DB83-4B05-881E-CE78DD0F598E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +77,8 @@ Global
 		{FD555978-0A1E-4DD8-B54D-AAD58634A1B3} = {5335AD99-D332-428E-83F2-D748F9D5774B}
 		{F179E87F-299D-48CD-B5FD-11D5CCF1CC5D} = {86C8AA45-B744-4E5B-896F-5249D5D5A476}
 		{7637831B-6B0C-47FE-9A4D-9C8613089154} = {F179E87F-299D-48CD-B5FD-11D5CCF1CC5D}
+		{BC4E7FEC-5908-484E-B5A3-7B6E95FA2AEB} = {86C8AA45-B744-4E5B-896F-5249D5D5A476}
+		{BD28436B-DB83-4B05-881E-CE78DD0F598E} = {BC4E7FEC-5908-484E-B5A3-7B6E95FA2AEB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1305D8CB-AB9B-4FFD-A026-023AA093FB7A}
