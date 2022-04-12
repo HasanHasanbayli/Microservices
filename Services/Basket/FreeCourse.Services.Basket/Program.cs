@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using FreeCourse.Services.Basket.Services;
 using FreeCourse.Services.Basket.Settings;
 using FreeCourse.Shared.Services;
@@ -6,31 +7,35 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+IServiceCollection services = builder.Services;
+IConfiguration configuration = builder.Configuration;
 
-builder.Services.AddHttpContextAccessor();
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
-var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Authority = builder.Configuration["IdentityServerUrl"];
     options.Audience = "resource_basket";
     options.RequireHttpsMetadata = false;
 });
 
-builder.Services.AddControllers(options =>
-    {
-        options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
-    }
-);
+AuthorizationPolicy requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 
-builder.Services.AddScoped<ISharedIdentityService, SharedIdentityService>();
-builder.Services.AddScoped<IBasketService, BasketService>();
+services.AddControllers(options =>
+{
+    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
+});
 
-builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("RedisSettings"));
+services.AddHttpContextAccessor();
 
-builder.Services.AddSingleton<RedisService>(sp =>
+services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+
+services.AddScoped<IBasketService, BasketService>();
+
+services.Configure<RedisSettings>(configuration.GetSection("RedisSettings"));
+
+services.AddSingleton(sp =>
 {
     var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
 
@@ -41,13 +46,13 @@ builder.Services.AddSingleton<RedisService>(sp =>
     return redis;
 });
 
-builder.Services.AddControllers();
+services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
+services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
