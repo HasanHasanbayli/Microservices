@@ -52,12 +52,14 @@ public class AuthController : ControllerBase
 
         if (user == null)
             return BadRequest();
-
-
+        
         return Ok(new
         {
-            Id = user.Id, UserName = user.UserName, Email = user.Email, FirstName = user.FirstName,
-            LastName = user.LastName
+            user.Id,
+            user.UserName,
+            user.Email,
+            user.FirstName,
+            user.LastName
         });
     }
 }
