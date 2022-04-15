@@ -1,8 +1,34 @@
+using System.IdentityModel.Tokens.Jwt;
+using FreeCourse.Services.Discount.Services;
+using FreeCourse.Shared.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
-services.AddControllers();
+services.AddHttpContextAccessor();
+
+services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+services.AddScoped<IDiscountService, DiscountService>();
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.Authority = configuration["IdentityServerUrl"];
+    options.Audience = "resource_discount";
+    options.RequireHttpsMetadata = false;
+});
+
+var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+services.AddControllers(options =>
+{
+    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
+});
 
 services.AddEndpointsApiExplorer();
 
@@ -17,6 +43,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
