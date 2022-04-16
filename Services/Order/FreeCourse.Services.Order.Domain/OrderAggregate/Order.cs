@@ -8,7 +8,7 @@ public class Order : Entity, IAggregateRoot
     public Address Address { get; private set; }
     public string BuyerId { get; private set; }
     private readonly List<OrderItem> _orderItems;
-    private IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
+    public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
     public Order(string buyerId, Address address)
     {
