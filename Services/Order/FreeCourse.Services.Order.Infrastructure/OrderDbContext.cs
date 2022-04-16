@@ -20,7 +20,9 @@ public class OrderDbContext : DbContext
         modelBuilder.Entity<Domain.OrderAggregate.OrderItem>().ToTable("Orders", DEFAULT_SCHEMA);
 
         modelBuilder.Entity<Domain.OrderAggregate.OrderItem>().Property(x => x.Price).HasColumnType("decimal(18,2)");
-        
+
         modelBuilder.Entity<Domain.OrderAggregate.Order>().OwnsOne(o => o.Address).WithOwner();
+
+        base.OnModelCreating(modelBuilder);
     }
 }
