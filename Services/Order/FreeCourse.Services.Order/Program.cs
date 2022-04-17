@@ -1,15 +1,54 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.IdentityModel.Tokens.Jwt;
+using FreeCourse.Services.Order.Infrastructure;
+using FreeCourse.Shared.Services;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+IServiceCollection services = builder.Services;
+IConfiguration configuration = builder.Configuration;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddDbContext<OrderDbContext>(opt =>
+{
+    opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+        configure =>
+        {
+            configure.MigrationsAssembly("FreeCourse.Services.Order.Infrastructure");
+        });
+});
 
-var app = builder.Build();
+services.AddHttpContextAccessor();
 
-// Configure the HTTP request pipeline.
+services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+
+services.AddMediatR(typeof(FreeCourse.Services.Order.Application.Handlers.CreateOrderCommandHandler).Assembly);
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.Authority = configuration["IdentityServerUrl"];
+    options.Audience = "resource_order";
+    options.RequireHttpsMetadata = false;
+});
+
+AuthorizationPolicy requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+services.AddControllers(options =>
+{
+    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
+});
+
+services.AddControllers();
+
+services.AddEndpointsApiExplorer();
+
+services.AddSwaggerGen();
+
+WebApplication app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,6 +56,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

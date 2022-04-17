@@ -12,6 +12,7 @@ public static class Config
             new ApiResource("resource_photo_stock") {Scopes = {"photo_stock_full_permission"}},
             new ApiResource("resource_basket") {Scopes = {"basket_full_permission"}},
             new ApiResource("resource_discount") {Scopes = {"discount_full_permission"}},
+            new ApiResource("resource_order") {Scopes = {"order_full_permission"}},
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -32,6 +33,7 @@ public static class Config
             new ApiScope("photo_stock_full_permission", "Full access for Photo Stock API"),
             new ApiScope("basket_full_permission", "Full access for Basket API"),
             new ApiScope("discount_full_permission", "Full access for Discount API"),
+            new ApiScope("order_full_permission", "Full access for Order API"),
             new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -46,7 +48,9 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AllowedScopes =
                 {
-                    "catalog_full_permission", "photo_stock_full_permission", IdentityServerConstants.LocalApi.ScopeName
+                    "catalog_full_permission",
+                    "photo_stock_full_permission",
+                    IdentityServerConstants.LocalApi.ScopeName
                 }
             },
 
@@ -59,10 +63,14 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 AllowedScopes =
                 {
-                    "basket_full_permission", "discount_full_permission",
-                    IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OpenId,
+                    "basket_full_permission",
+                    "discount_full_permission",
+                    "order_full_permission",
+                    IdentityServerConstants.StandardScopes.Email,
+                    IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.OfflineAccess, IdentityServerConstants.LocalApi.ScopeName,
+                    IdentityServerConstants.StandardScopes.OfflineAccess,
+                    IdentityServerConstants.LocalApi.ScopeName,
                     "roles"
                 },
                 AccessTokenLifetime = 1 * 60 * 60,
