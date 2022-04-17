@@ -46,6 +46,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeCourse.Services.Order.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeCourse.Services.Order", "Services\Order\FreeCourse.Services.Order\FreeCourse.Services.Order.csproj", "{F9033C24-E590-4F94-841D-39C5124FAB86}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FakePayment", "FakePayment", "{B57C3CEB-28AE-4AC6-A629-56F5553684BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeCourse.Services.FakePayment", "Services\FakePayment\FreeCourse.Services.FakePayment\FreeCourse.Services.FakePayment.csproj", "{A345B5C5-8CC4-40AA-A9EB-A6B56168A051}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +100,10 @@ Global
 		{F9033C24-E590-4F94-841D-39C5124FAB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9033C24-E590-4F94-841D-39C5124FAB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9033C24-E590-4F94-841D-39C5124FAB86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A345B5C5-8CC4-40AA-A9EB-A6B56168A051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A345B5C5-8CC4-40AA-A9EB-A6B56168A051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A345B5C5-8CC4-40AA-A9EB-A6B56168A051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A345B5C5-8CC4-40AA-A9EB-A6B56168A051}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +125,8 @@ Global
 		{B70BEFA0-2E22-4064-B3CA-85A2079195F7} = {6AD74717-52BE-4730-874A-C243FA48FA18}
 		{615413A6-BC7E-4EB7-8BF2-3479F2DA2BD1} = {6AD74717-52BE-4730-874A-C243FA48FA18}
 		{F9033C24-E590-4F94-841D-39C5124FAB86} = {6AD74717-52BE-4730-874A-C243FA48FA18}
+		{B57C3CEB-28AE-4AC6-A629-56F5553684BE} = {86C8AA45-B744-4E5B-896F-5249D5D5A476}
+		{A345B5C5-8CC4-40AA-A9EB-A6B56168A051} = {B57C3CEB-28AE-4AC6-A629-56F5553684BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1305D8CB-AB9B-4FFD-A026-023AA093FB7A}

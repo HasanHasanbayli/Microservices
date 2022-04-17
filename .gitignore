@@ -5,6 +5,6 @@
 .vs
 **/bin
 **/obj
-Services/PhotoStock/FreeCourse.Services.PhotoStock/wwwroot
+Services/PhotoStock/FreeCourse.Services.PhotoStock/wwwroot/**
 .gitignore
 UdemyMicroservices.sln.DotSettings.user
