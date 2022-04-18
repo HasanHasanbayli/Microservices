@@ -14,6 +14,7 @@ public static class Config
             new ApiResource("resource_discount") {Scopes = {"discount_full_permission"}},
             new ApiResource("resource_order") {Scopes = {"order_full_permission"}},
             new ApiResource("resource_payment") {Scopes = {"payment_full_permission"}},
+            new ApiResource("resource_gateway") {Scopes = {"gateway_full_permission"}},
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -36,6 +37,7 @@ public static class Config
             new ApiScope("discount_full_permission", "Full access for Discount API"),
             new ApiScope("order_full_permission", "Full access for Order API"),
             new ApiScope("payment_full_permission", "Full access for Payment API"),
+            new ApiScope("gateway_full_permission", "Full access for Gateway"),
             new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -52,6 +54,7 @@ public static class Config
                 {
                     "catalog_full_permission",
                     "photo_stock_full_permission",
+                    "gateway_full_permission",
                     IdentityServerConstants.LocalApi.ScopeName
                 }
             },
@@ -69,6 +72,7 @@ public static class Config
                     "discount_full_permission",
                     "order_full_permission",
                     "payment_full_permission",
+                    "gateway_full_permission",
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,

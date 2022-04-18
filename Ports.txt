@@ -1,4 +1,5 @@
 IdentityServer=> 5001
+
 Services
     -catalogAPI=> 5011
     -photoStockApi=> 5012
@@ -6,3 +7,5 @@ Services
     -discountApi=> 5014
     -orderApi=> 5015
     -fakePaymentApi=> 5016
+
+Gateway=> 5000

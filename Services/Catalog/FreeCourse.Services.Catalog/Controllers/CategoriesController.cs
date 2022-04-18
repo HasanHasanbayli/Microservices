@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FreeCourse.Services.Catalog.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 public class CategoriesController : CustomBaseController
 {
     private readonly ICategoryService _categoryService;

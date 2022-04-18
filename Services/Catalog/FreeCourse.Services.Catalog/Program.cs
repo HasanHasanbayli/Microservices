@@ -1,3 +1,5 @@
+using FreeCourse.Services.Catalog.DTOs;
+using FreeCourse.Services.Catalog.Models;
 using FreeCourse.Services.Catalog.Services;
 using FreeCourse.Services.Catalog.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,5 +48,18 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+
+    var categoryService = serviceProvider.GetRequiredService<ICategoryService>();
+
+    if (!categoryService.GetAllAsync().Result.Data.Any())
+    {
+        categoryService.CreateAsync(new CategoryCreateDTO {Name = "Asp.net Core Course"}).Wait();
+        categoryService.CreateAsync(new CategoryCreateDTO {Name = "Asp.net Core Web API Course"}).Wait();
+    }
+}
 
 app.Run();

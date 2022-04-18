@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FreeCourse.Services.Catalog.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 public class CoursesController : CustomBaseController
 {
     private readonly ICourseService _courseService;
