@@ -34,7 +34,13 @@
         "Put",
         "Delete"
       ],
-      "UpstreamScheme": "http"
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "photo_stock_full_permission"
+        ]
+      }
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
@@ -52,7 +58,13 @@
         "Put",
         "Delete"
       ],
-      "UpstreamScheme": "http"
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "basket_full_permission"
+        ]
+      }
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
@@ -70,7 +82,13 @@
         "Put",
         "Delete"
       ],
-      "UpstreamScheme": "http"
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "discount_full_permission"
+        ]
+      }
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
@@ -88,7 +106,13 @@
         "Put",
         "Delete"
       ],
-      "UpstreamScheme": "http"
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "order_full_permission"
+        ]
+      }
     },
     {
       "DownstreamPathTemplate": "/api/{everything}",
@@ -106,7 +130,13 @@
         "Put",
         "Delete"
       ],
-      "UpstreamScheme": "http"
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "payment_full_permission"
+        ]
+      }
     }
   ],
   "GlobalConfiguration": {
