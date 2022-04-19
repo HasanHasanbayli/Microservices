@@ -9,3 +9,5 @@ Services
     -fakePaymentApi=> 5016
 
 Gateway=> 5000
+
+Web=> 5010
