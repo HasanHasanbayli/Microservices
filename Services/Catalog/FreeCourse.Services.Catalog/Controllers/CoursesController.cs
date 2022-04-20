@@ -33,7 +33,7 @@ public class CoursesController : CustomBaseController
     }
 
     [HttpGet]
-    [Route("/api/v1/[controller]/GetAllByUserId/{userId}")]
+    [Route("/api/[controller]/GetAllByUserId/{userId}")]
     public async Task<IActionResult> GetAllByUserId(string userId)
     {
         var response = await _courseService.GetAllByUserId(userId);

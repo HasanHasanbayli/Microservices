@@ -1,0 +1,44 @@
+@model List<CourseViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Courses</h5>
+            @if (Model.Any())
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Picture</th>
+                        <th>Course Name</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th></th>
+                            <th>@item.Name</th>
+                            <th>@item.Price</th>
+                            <th>@item.Feature.Duration</th>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    Courses not found
+                </div>
+            }
+        </div>
+    </div>
+</div>

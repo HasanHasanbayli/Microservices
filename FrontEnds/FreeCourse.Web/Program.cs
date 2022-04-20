@@ -1,3 +1,4 @@
+using FreeCourse.Shared.Services;
 using FreeCourse.Web.Handlers;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services;
@@ -13,6 +14,7 @@ services.AddControllersWithViews();
 services.AddHttpContextAccessor();
 
 services.AddScoped<ResourceOwnerPasswordTokenHandler>();
+services.AddScoped<ISharedIdentityService,SharedIdentityService>();
 
 services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));
 services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
@@ -20,6 +22,12 @@ services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSetti
 var serviceApiSettings = configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
 
 services.AddHttpClient<IIdentityService, IdentityService>();
+
+services.AddHttpClient<ICatalogService, CatalogService>(options =>
+{
+    options.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
+});
+
 services.AddHttpClient<IUserService, UserService>(options =>
 {
     options.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
