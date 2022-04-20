@@ -32,7 +32,7 @@ public class IdentityService : IIdentityService
     {
         var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
-            Address = _serviceApiSettings.BaseUri,
+            Address = _serviceApiSettings.IdentityBaseUri,
             Policy = new DiscoveryPolicy {RequireHttps = false}
         });
 
@@ -77,18 +77,18 @@ public class IdentityService : IIdentityService
             throw userInfo.Exception;
         }
 
-        ClaimsIdentity claimsIdentity = new ClaimsIdentity(userInfo.Claims,
+        var claimsIdentity = new ClaimsIdentity(userInfo.Claims,
             CookieAuthenticationDefaults.AuthenticationScheme, "name", "role");
 
-        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         var authenticationProperties = new AuthenticationProperties();
 
         authenticationProperties.StoreTokens(new List<AuthenticationToken>
         {
-            new AuthenticationToken {Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken},
-            new AuthenticationToken {Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken},
-            new AuthenticationToken
+            new() {Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken},
+            new() {Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken},
+            new()
             {
                 Name = OpenIdConnectParameterNames.ExpiresIn,
                 Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o", CultureInfo.InvariantCulture)
@@ -103,13 +103,85 @@ public class IdentityService : IIdentityService
         return Response<bool>.Success(200);
     }
 
-    public Task<TokenResponse> GetAccessTokenByRefreshToken()
+    public async Task<TokenResponse> GetAccessTokenByRefreshToken()
     {
-        throw new NotImplementedException();
+        var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+        {
+            Address = _serviceApiSettings.IdentityBaseUri,
+            Policy = new DiscoveryPolicy {RequireHttps = false}
+        });
+
+        if (disco.IsError)
+        {
+            throw disco.Exception;
+        }
+
+        var refreshToken =
+            await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+        RefreshTokenRequest refreshTokenRequest = new()
+        {
+            ClientId = _clientSettings.WebClientForUser.ClientId,
+            ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
+            RefreshToken = refreshToken,
+            Address = disco.TokenEndpoint
+        };
+
+        var token = await _httpClient.RequestRefreshTokenAsync(refreshTokenRequest);
+
+        if (token.IsError)
+        {
+            return null;
+        }
+
+        var authenticationTokens = new List<AuthenticationToken>
+        {
+            new() {Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken},
+            new() {Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken},
+            new()
+            {
+                Name = OpenIdConnectParameterNames.ExpiresIn,
+                Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o", CultureInfo.InvariantCulture)
+            }
+        };
+
+        var authenticationResult = await _httpContextAccessor.HttpContext.AuthenticateAsync();
+
+        var properties = authenticationResult.Properties;
+
+        properties.StoreTokens(authenticationTokens);
+
+        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            authenticationResult.Principal, properties);
+
+        return token;
     }
 
-    public Task RevokeRefreshToken()
+    public async Task RevokeRefreshToken()
     {
-        throw new NotImplementedException();
+        var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+        {
+            Address = _serviceApiSettings.IdentityBaseUri,
+            Policy = new DiscoveryPolicy {RequireHttps = false}
+        });
+
+        if (disco.IsError)
+        {
+            throw disco.Exception;
+        }
+
+        var refreshToken =
+            await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+        TokenRevocationRequest tokenRevocationRequest = new()
+        {
+            ClientId = _clientSettings.WebClientForUser.ClientId,
+            ClientSecret = _clientSettings.WebClientForUser.ClientSecret,
+            Address = disco.RevocationEndpoint,
+            Token = refreshToken,
+            TokenTypeHint = "refresh_token"
+        };
+
+        await _httpClient.RevokeTokenAsync(tokenRevocationRequest);
     }
 }

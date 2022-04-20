@@ -1,3 +1,4 @@
+using FreeCourse.Web.Handlers;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services;
 using FreeCourse.Web.Services.Interfaces;
@@ -10,9 +11,19 @@ IConfiguration configuration = builder.Configuration;
 services.AddControllersWithViews();
 
 services.AddHttpContextAccessor();
-services.AddHttpClient<IIdentityService, IdentityService>();
+
+services.AddScoped<ResourceOwnerPasswordTokenHandler>();
+
 services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));
 services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
+
+var serviceApiSettings = configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
+
+services.AddHttpClient<IIdentityService, IdentityService>();
+services.AddHttpClient<IUserService, UserService>(options =>
+{
+    options.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
+}).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
     CookieAuthenticationDefaults.AuthenticationScheme,
@@ -44,7 +55,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    "default",
+    "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

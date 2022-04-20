@@ -1,5 +1,7 @@
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FreeCourse.Web.Controllers;
@@ -29,7 +31,7 @@ public class AuthController : Controller
         var response = await _identityService.SignIn(loginRequest);
 
         if (response.IsSuccessful) 
-            return RedirectToAction(nameof(Index), "Home");
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         
         response.Errors.ForEach(error =>
         {
@@ -38,5 +40,14 @@ public class AuthController : Controller
 
         return View();
 
+    }
+    
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        
+        await _identityService.RevokeRefreshToken();
+
+        return RedirectToAction(nameof(HomeController.Index), "Home");
     }
 }
