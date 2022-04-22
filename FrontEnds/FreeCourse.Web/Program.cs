@@ -12,26 +12,30 @@ IConfiguration configuration = builder.Configuration;
 services.AddControllersWithViews();
 
 services.AddHttpContextAccessor();
-
+services.AddAccessTokenManagement();
+ 
 services.AddScoped<ResourceOwnerPasswordTokenHandler>();
-services.AddScoped<ISharedIdentityService,SharedIdentityService>();
+services.AddScoped<ClientCredentialTokenHandler>();
+services.AddScoped<ISharedIdentityService, SharedIdentityService>();
 
 services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));
 services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
 
 var serviceApiSettings = configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
 
+services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
 services.AddHttpClient<IIdentityService, IdentityService>();
 
 services.AddHttpClient<ICatalogService, CatalogService>(options =>
 {
     options.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
-});
+}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
 services.AddHttpClient<IUserService, UserService>(options =>
 {
     options.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
 }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
     CookieAuthenticationDefaults.AuthenticationScheme,

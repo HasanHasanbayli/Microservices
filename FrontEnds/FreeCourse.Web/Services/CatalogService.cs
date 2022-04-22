@@ -17,7 +17,7 @@ public class CatalogService : ICatalogService
     {
         var response = await _httpClient.GetAsync("api/Courses");
 
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             return null;
         }
@@ -29,9 +29,9 @@ public class CatalogService : ICatalogService
 
     public async Task<List<CategoryViewModel>> GetAllCategoryAsync()
     {
-        var response = await _httpClient.GetAsync("api/Categories");
+        var response = await _httpClient.GetAsync("categories");
 
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             return null;
         }
@@ -43,9 +43,9 @@ public class CatalogService : ICatalogService
 
     public async Task<List<CourseViewModel>> GetAllCourseByUserIdAsync(string userId)
     {
-        var response = await _httpClient.GetAsync($"api/Courses/GetAllByUserId/{userId}");
+        var response = await _httpClient.GetAsync($"courses/GetAllByUserId/{userId}");
 
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             return null;
         }
@@ -59,7 +59,7 @@ public class CatalogService : ICatalogService
     {
         var response = await _httpClient.GetAsync($"api/Courses/{courseId}");
 
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             return null;
         }
