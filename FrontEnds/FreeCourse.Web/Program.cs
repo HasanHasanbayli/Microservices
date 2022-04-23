@@ -1,5 +1,6 @@
 using FreeCourse.Shared.Services;
 using FreeCourse.Web.Handlers;
+using FreeCourse.Web.Helpers;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services;
 using FreeCourse.Web.Services.Interfaces;
@@ -13,10 +14,13 @@ services.AddControllersWithViews();
 
 services.AddHttpContextAccessor();
 services.AddAccessTokenManagement();
- 
+
 services.AddScoped<ResourceOwnerPasswordTokenHandler>();
 services.AddScoped<ClientCredentialTokenHandler>();
 services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+services.AddScoped<IPhotoStockService, PhotoStockService>();
+
+services.AddSingleton<PhotoHelper>();
 
 services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));
 services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
@@ -24,6 +28,7 @@ services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSetti
 var serviceApiSettings = configuration.GetSection("ServiceApiSettings").Get<ServiceApiSettings>();
 
 services.AddHttpClient<IClientCredentialTokenService, ClientCredentialTokenService>();
+
 services.AddHttpClient<IIdentityService, IdentityService>();
 
 services.AddHttpClient<ICatalogService, CatalogService>(options =>
@@ -31,11 +36,15 @@ services.AddHttpClient<ICatalogService, CatalogService>(options =>
     options.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Catalog.Path}");
 }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
+services.AddHttpClient<IPhotoStockService, PhotoStockService>(options =>
+{
+    options.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.PhotoStock.Path}");
+}).AddHttpMessageHandler<ClientCredentialTokenHandler>();
+
 services.AddHttpClient<IUserService, UserService>(options =>
 {
     options.BaseAddress = new Uri(serviceApiSettings.IdentityBaseUri);
 }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
-
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
     CookieAuthenticationDefaults.AuthenticationScheme,
@@ -46,7 +55,6 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
         options.SlidingExpiration = true;
         options.Cookie.Name = "udemywebcookie";
     });
-
 
 WebApplication app = builder.Build();
 

@@ -37,17 +37,69 @@ public class CoursesController : Controller
     public async Task<IActionResult> Create(CourseCreateInput courseCreateInput)
     {
         var categories = await _catalogService.GetAllCategoryAsync();
-        
+
         ViewBag.categoryList = new SelectList(categories, "Id", "Name");
 
-        if (!ModelState.IsValid)
-        {
-            return View();
-        }
+        // if (!ModelState.IsValid)
+        // {
+        // return View();
+        // }
 
         courseCreateInput.UserId = _sharedIdentityService.GetUserId;
 
-        var a = await _catalogService.CreateCourseAsync(courseCreateInput);
+        await _catalogService.CreateCourseAsync(courseCreateInput);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Update(string id)
+    {
+        var course = await _catalogService.GetCourseById(id);
+
+        var categories = await _catalogService.GetAllCategoryAsync();
+
+        if (course == null)
+        {
+            RedirectToAction(nameof(Index));
+        }
+
+        ViewBag.categoryList = new SelectList(categories, "Id", "Name");
+
+        CourseUpdateInput courseUpdateInput = new()
+        {
+            Id = course.Id,
+            Name = course.Name,
+            Description = course.Description,
+            Price = course.Price,
+            Feature = course.Feature,
+            CategoryId = course.CategoryId,
+            UserId = course.UserId,
+            Picture = course.Picture
+        };
+
+        return View(courseUpdateInput);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(CourseUpdateInput courseUpdateInput)
+    {
+        var categories = await _catalogService.GetAllCategoryAsync();
+
+        ViewBag.categoryList = new SelectList(categories, "Id", "Name", courseUpdateInput.Id);
+
+        // if (!ModelState.IsValid)
+        // {
+        //     return View();
+        // }
+
+        await _catalogService.UpdateCourseAsync(courseUpdateInput);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Delete(string id)
+    {
+        await _catalogService.DeleteCourseAsync(id);
 
         return RedirectToAction(nameof(Index));
     }

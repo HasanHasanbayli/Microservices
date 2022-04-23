@@ -15,7 +15,6 @@ public class PhotosController : CustomBaseController
         _photoService = photoService;
     }
 
-    [HttpPost("photosave")]
     public async Task<IActionResult> PhotoSave(IFormFile photo, CancellationToken cancellationToken)
     {
         var response = await _photoService.PhotoSave(photo, cancellationToken);
@@ -23,7 +22,6 @@ public class PhotosController : CustomBaseController
         return CreateActionResultInstance(response);
     }
 
-    [HttpDelete("photodelete")]
     public async Task<IActionResult> PhotoDelete(string photoUrl)
     {
         var response = await _photoService.PhotoDelete(photoUrl);

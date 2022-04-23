@@ -9,16 +9,14 @@ public class PhotoService : IPhotoService
     {
         if (photo == null || photo.Length <= 0)
             return Response<PhotoDto>.Fail("photo is empty", 400);
-        
-        var fileName = Guid.NewGuid() + photo.FileName;
 
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", fileName);
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", photo.FileName);
 
         await using var stream = new FileStream(path, FileMode.Create);
 
         await photo.CopyToAsync(stream, cancellationToken);
 
-        var returnPath = "photos/" + fileName;
+        var returnPath = photo.FileName;
 
         PhotoDto photoDto = new() {Url = returnPath};
 
