@@ -13,8 +13,10 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     options.RequireHttpsMetadata = false;
 });
 
-services.AddControllers(
-    options => { options.Filters.Add(new AuthorizeFilter()); }
+services.AddControllers(options =>
+    {
+        options.Filters.Add(new AuthorizeFilter());
+    }
 );
 
 services.AddControllers();

@@ -1,3 +1,5 @@
+using System;
+
 namespace FreeCourse.Web.Models.Catalog;
 
 public class CourseViewModel
@@ -8,10 +10,15 @@ public class CourseViewModel
 
     public string Description { get; set; }
 
+    public string ShortDescription =>
+        Description.Length > 100 ? string.Concat(Description.AsSpan(1, 100), "...") : Description;
+
     public decimal Price { get; set; }
 
     public string Picture { get; set; }
-    
+
+    public string StockPictureUrl { get; set; }
+
     public string UserId { get; set; }
 
     public DateTime CreatedDate { get; set; }

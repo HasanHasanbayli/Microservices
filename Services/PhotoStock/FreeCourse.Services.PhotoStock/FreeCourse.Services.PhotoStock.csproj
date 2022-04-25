@@ -14,13 +14,9 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\FreeCourse.Shared\FreeCourse.Shared.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
       <Folder Include="wwwroot\photos" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="wwwroot\photos\7fe4d889-8efa-4b21-8f70-1cdc2f79237cphoto_2022-04-09_16-12-53.jpg" />
     </ItemGroup>
 
 </Project>

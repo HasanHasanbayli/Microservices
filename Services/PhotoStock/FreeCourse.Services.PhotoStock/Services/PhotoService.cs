@@ -18,7 +18,10 @@ public class PhotoService : IPhotoService
 
         var returnPath = photo.FileName;
 
-        PhotoDto photoDto = new() {Url = returnPath};
+        PhotoDto photoDto = new()
+        {
+            Url = returnPath
+        };
 
         return Response<PhotoDto>.Success(photoDto, 200);
     }
