@@ -30,22 +30,21 @@ public class AuthController : Controller
 
         var response = await _identityService.SignIn(loginRequest);
 
-        if (response.IsSuccessful) 
+        if (response.IsSuccessful)
             return RedirectToAction(nameof(HomeController.Index), "Home");
-        
+
         response.Errors.ForEach(error =>
         {
             ModelState.AddModelError(String.Empty, error);
         });
 
         return View();
-
     }
-    
+
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        
+
         await _identityService.RevokeRefreshToken();
 
         return RedirectToAction(nameof(HomeController.Index), "Home");
