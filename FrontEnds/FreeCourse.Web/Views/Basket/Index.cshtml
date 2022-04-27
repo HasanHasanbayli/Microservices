@@ -1,0 +1,51 @@
+﻿@model BasketViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Basket</h5>
+                @if (Model != null && Model.BasketItems.Any())
+                {
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Course name</th>
+                            <th>Course price</th>
+                            <th>Edit</th>
+                        </tr>
+                        @foreach (var item in Model.BasketItems)
+                        {
+                            <tr>
+                                <td>@item.CourseName</td>
+                                <td>@item.Price</td>
+                                <td>
+                                    <a class="btn btn-danger" asp-controller="Courses" asp-action="Delete" asp-route-courseId="@item.CourseId">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                        @if (Model.HasDiscount)
+                        {
+                            <tr>
+                                <td>Discount rate</td>
+                                <td colspan="2">@Model.DiscountRate.Value</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>@Model.HasDiscount? "Discounted amount":"Total price"</td>
+                            <th colspan="2">@Model.TotalPrice USD</th>
+                        </tr>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-info">Basket is empty</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

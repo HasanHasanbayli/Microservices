@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using FreeCourse.Web.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace FreeCourse.Web.Controllers;
 
@@ -25,7 +27,7 @@ public class HomeController : Controller
     {
         return View(await _catalogService.GetCourseById(id));
     }
-    
+
     public IActionResult Privacy()
     {
         return View();
@@ -34,6 +36,13 @@ public class HomeController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
+        var errorFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+
+        if (errorFeature != null && errorFeature.Error is UnAuthorizeException)
+        {
+            return RedirectToAction(nameof(AuthController.Logout), "Auth");
+        }
+
         return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
     }
 }

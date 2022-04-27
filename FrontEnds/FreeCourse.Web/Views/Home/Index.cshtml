@@ -9,7 +9,7 @@
 <hr/>
 @if (Model.Any())
 {
-    foreach (var x in Model)
+    foreach (var item in Model)
     {
         count++;
         if (count == 1 || count % 3 == 1)
@@ -18,12 +18,12 @@
         }
         <div class="col">
             <div class="card">
-                <img src="@x.StockPictureUrl" class="card-img-top" alt="...">
+                <img src="@item.StockPictureUrl" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">@x.Name</h5>
-                    <p class="card-text">@x.ShortDescription</p>
-                    <h4 class="text-primary">@x.Price USD</h4>
-                    <a href="">Detail</a>
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.ShortDescription</p>
+                    <h4 class="text-primary">@item.Price USD</h4>
+                    <a class="btn btn-success" asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
                 </div>
             </div>
         </div>
