@@ -23,7 +23,10 @@
                     <h5 class="card-title">@item.Name</h5>
                     <p class="card-text">@item.ShortDescription</p>
                     <h4 class="text-primary">@item.Price USD</h4>
-                    <a class="btn btn-success" asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
+                    <div class="badge bg-primary">Category: @item.Category.Name</div>
+                    <div>
+                        <a class="btn btn-success" asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
+                    </div>
                 </div>
             </div>
         </div>

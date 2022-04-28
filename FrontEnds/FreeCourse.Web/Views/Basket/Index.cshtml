@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Basket</h5>
-                @if (Model != null && Model.BasketItems.Any())
+                @if (Model != null && Model.BasketItem.Any())
                 {
                     <table class="table table-striped">
                         <tr>
@@ -18,13 +18,13 @@
                             <th>Course price</th>
                             <th>Edit</th>
                         </tr>
-                        @foreach (var item in Model.BasketItems)
+                        @foreach (var item in Model.BasketItem)
                         {
                             <tr>
                                 <td>@item.CourseName</td>
                                 <td>@item.Price</td>
                                 <td>
-                                    <a class="btn btn-danger" asp-controller="Courses" asp-action="Delete" asp-route-courseId="@item.CourseId">Delete</a>
+                                    <a class="btn btn-danger" asp-controller="Basket" asp-action="DeleteBasketItem" asp-route-courseId="@item.CourseId">Delete</a>
                                 </td>
                             </tr>
                         }
@@ -32,11 +32,11 @@
                         {
                             <tr>
                                 <td>Discount rate</td>
-                                <td colspan="2">@Model.DiscountRate.Value</td>
+                                <td colspan="2">%@Model.DiscountRate.Value</td>
                             </tr>
                         }
                         <tr>
-                            <td>@Model.HasDiscount? "Discounted amount":"Total price"</td>
+                            <td>@(Model.HasDiscount ? "Discounted amount" : "Total price")</td>
                             <th colspan="2">@Model.TotalPrice USD</th>
                         </tr>
                     </table>

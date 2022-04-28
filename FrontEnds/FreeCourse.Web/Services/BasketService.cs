@@ -16,7 +16,7 @@ public class BasketService : IBasketService
     public async Task<bool> SaveOrUpdate(BasketViewModel basketViewModel)
     {
         var response = await _httpClient.PostAsJsonAsync("basket", basketViewModel);
-
+      
         return response.IsSuccessStatusCode;
     }
 
@@ -45,17 +45,14 @@ public class BasketService : IBasketService
     {
         var basket = await Get();
 
-        if (basket != null)
+        if (basket != null && basket.BasketItem.Any(x => x.CourseId == basketItemViewModel.CourseId))
         {
-            if (basket.BasketItems.Any(x => x.CourseId == basketItemViewModel.CourseId))
-            {
-                basket.BasketItems.Add(basketItemViewModel);
-            }
+            basket.BasketItem.Add(basketItemViewModel);
         }
         else
         {
             basket = new BasketViewModel();
-            basket.BasketItems.Add(basketItemViewModel);
+            basket.BasketItem.Add(basketItemViewModel);
         }
 
         await SaveOrUpdate(basket);
@@ -70,21 +67,21 @@ public class BasketService : IBasketService
             return false;
         }
 
-        var deleteBasketItem = basket.BasketItems.FirstOrDefault(x => x.CourseId == courseId);
+        var deleteBasketItem = basket.BasketItem.FirstOrDefault(x => x.CourseId == courseId);
 
         if (deleteBasketItem == null)
         {
             return false;
         }
 
-        var deleteResult = basket.BasketItems.Remove(deleteBasketItem);
+        var deleteResult = basket.BasketItem.Remove(deleteBasketItem);
 
         if (!deleteResult)
         {
             return false;
         }
 
-        if (!basket.BasketItems.Any())
+        if (!basket.BasketItem.Any())
         {
             basket.DiscountCode = null;
         }
