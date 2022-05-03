@@ -27,12 +27,19 @@ public static class ServiceExtension
 
         services.AddHttpClient<IPhotoStockService, PhotoStockService>(options =>
         {
-            options.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.PhotoStock.Path}");
+            options.BaseAddress =
+                new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.PhotoStock.Path}");
         }).AddHttpMessageHandler<ClientCredentialTokenHandler>();
 
         services.AddHttpClient<IBasketService, BasketService>(options =>
         {
             options.BaseAddress = new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Basket.Path}");
+        }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
+
+        services.AddHttpClient<IDiscountService, DiscountService>(options =>
+        {
+            options.BaseAddress =
+                new Uri($"{serviceApiSettings.GatewayBaseUri}/{serviceApiSettings.Discount.Path}");
         }).AddHttpMessageHandler<ResourceOwnerPasswordTokenHandler>();
     }
 }

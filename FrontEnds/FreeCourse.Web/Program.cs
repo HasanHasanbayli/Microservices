@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using FreeCourse.Shared.Services;
 using FreeCourse.Web.Extensions;
 using FreeCourse.Web.Handlers;
@@ -5,13 +6,16 @@ using FreeCourse.Web.Helpers;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services;
 using FreeCourse.Web.Services.Interfaces;
+using FreeCourse.Web.Validators;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
-services.AddControllersWithViews();
+services.AddControllersWithViews().AddFluentValidation(fv =>
+    fv.RegisterValidatorsFromAssemblyContaining<CourseCreateInputValidator>());
+
 services.AddHttpContextAccessor();
 services.AddAccessTokenManagement();
 

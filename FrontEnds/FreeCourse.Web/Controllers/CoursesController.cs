@@ -36,12 +36,15 @@ public class CoursesController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CourseCreateInput courseCreateInput)
     {
+        if (!ModelState.IsValid)
+            return View();
+        
         var categories = await _catalogService.GetAllCategoryAsync();
 
         ViewBag.categoryList = new SelectList(categories, "Id", "Name");
 
         courseCreateInput.UserId = _sharedIdentityService.GetUserId;
-        
+
         await _catalogService.CreateCourseAsync(courseCreateInput);
 
         return RedirectToAction(nameof(Index));
