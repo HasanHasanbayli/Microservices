@@ -1,4 +1,5 @@
 ﻿using FreeCourse.Web.Models.Basket;
+using FreeCourse.Web.Models.Discounts;
 using FreeCourse.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,28 @@ public class BasketController : Controller
     public async Task<IActionResult> DeleteBasketItem(string courseId)
     {
         await _basketService.DeleteBasketItem(courseId);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> ApplyDiscount(DiscountApplyInput discountApplyInput)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["discountError"] = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).First();
+            return RedirectToAction(nameof(Index));
+        }
+
+        var discountStatus = await _basketService.ApplyDiscount(discountApplyInput.Code);
+
+        TempData["discountStatus"] = discountStatus;
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> CancelApplyDiscount()
+    {
+        await _basketService.CancelApplyDiscount();
 
         return RedirectToAction(nameof(Index));
     }

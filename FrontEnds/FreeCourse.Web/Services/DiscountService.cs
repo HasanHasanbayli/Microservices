@@ -15,7 +15,7 @@ public class DiscountService : IDiscountService
 
     public async Task<DiscountViewModel> GetDiscount(string discountCode)
     {
-        var response = await _httpClient.GetAsync($"discounts/GetByCode/{discountCode}");
+        var response = await _httpClient.GetAsync($"Discounts/GetByCode/{discountCode}");
 
         if (!response.IsSuccessStatusCode)
         {
