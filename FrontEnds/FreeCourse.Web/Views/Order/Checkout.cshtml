@@ -1,0 +1,87 @@
+﻿@model CheckoutInfoInput
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<form asp-controller="Order" asp-action="Checkout" method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Address information</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="Province" class="form-control"></label>
+                        <input asp-for="Province" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="District" class="form-control"></label>
+                        <input asp-for="District" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Street" class="form-control"></label>
+                        <input asp-for="Street" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Line" class="form-control"></label>
+                        <input asp-for="Line" class="form-control">
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label asp-for="ZipCode" class="form-control"></label>
+                        <input asp-for="ZipCode" class="form-control">
+                    </div>
+
+                    <h5 class="card-title">Payment informations</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="CardName" class="form-control"></label>
+                        <input asp-for="CardName" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CardNumber" class="form-control"></label>
+                        <input asp-for="CardNumber" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Expiration" class="form-control"></label>
+                        <input asp-for="Expiration" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CVV" class="form-control"></label>
+                        <input asp-for="CVV" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Payment summary</h5>
+                    <table class="table table-striped">
+                        @foreach (var item in ViewBag.basket.BasketItem as List<BasketItemViewModel>)
+                        {
+                            <tr>
+                                <td>@item.CourseName</td>
+                                <td>@item.Price</td>
+                            </tr>
+                            <tr>
+                                <td>@(ViewBag.basket.HasDiscount ? "Discounted total price" : "Total price")</td>
+                                <td>@ViewBag.basket.TotalPrice USD</td>
+                            </tr>
+                        }
+                    </table>
+                    <button type="submit" class="btn btn-success">Complete the payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

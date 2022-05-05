@@ -1,0 +1,12 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="alert alert-info">
+    <p>Order(payment) completed successfully</p>
+    <p>Order(payment) no: @ViewBag.orderId</p>
+</div>
+<a class="btn btn-primary" asp-controller="Home" asp-action="Index">Home page</a>
