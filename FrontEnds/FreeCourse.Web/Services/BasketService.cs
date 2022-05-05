@@ -38,7 +38,7 @@ public class BasketService : IBasketService
 
     public async Task<bool> Delete()
     {
-        var result = await _httpClient.DeleteAsync("baskets");
+        var result = await _httpClient.DeleteAsync("basket");
 
         return result.IsSuccessStatusCode;
     }

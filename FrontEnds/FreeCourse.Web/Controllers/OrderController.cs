@@ -41,7 +41,6 @@ public class OrderController : Controller
         return RedirectToAction(nameof(SuccessfulCheckout), new {orderId = orderStatus.OrderId});
     }
 
-    [HttpPost]
     public async Task<IActionResult> SuccessfulCheckout(int orderId)
     {
         ViewBag.orderId = orderId;

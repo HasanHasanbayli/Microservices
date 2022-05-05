@@ -42,20 +42,29 @@ public class OrderService : IOrderService
             return new OrderCreatedViewModel {Error = "Payment not received", IsSuccessful = false};
         }
 
-        var orderCreateInput = new OrderCreateInput()
+        OrderCreateInput orderCreateInput = new()
         {
             BuyerId = _sharedIdentityService.GetUserId,
             Address = new AddressCreateInput
             {
-                Province = checkoutInfoInput.Province, District = checkoutInfoInput.District,
-                Street = checkoutInfoInput.Street, Line = checkoutInfoInput.Line, ZipCode = checkoutInfoInput.ZipCode
-            },
+                Province = checkoutInfoInput.Province,
+                District = checkoutInfoInput.District,
+                Street = checkoutInfoInput.Street,
+                Line = checkoutInfoInput.Line,
+                ZipCode = checkoutInfoInput.ZipCode
+            }
         };
 
         basket.BasketItem.ForEach(x =>
         {
-            var orderItem = new OrderItemCreateInput
-                {ProductId = x.CourseId, Price = x.GetCurrentPrice, PictureUrl = "", ProductName = x.CourseName};
+            OrderItemCreateInput orderItem = new()
+            {
+                ProductId = x.CourseId,
+                Price = x.GetCurrentPrice,
+                PictureUrl = "",
+                ProductName = x.CourseName
+            };
+
             orderCreateInput.OrderItems.Add(orderItem);
         });
 
@@ -69,6 +78,8 @@ public class OrderService : IOrderService
         var orderCreatedViewModel = await response.Content.ReadFromJsonAsync<Response<OrderCreatedViewModel>>();
 
         orderCreatedViewModel.Data.IsSuccessful = true;
+
+        await _basketService.Delete();
 
         return orderCreatedViewModel.Data;
     }
