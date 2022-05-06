@@ -21,7 +21,7 @@ public class GetOrdersByUserIdQueryHandler : IRequestHandler<GetOrdersByUserIdQu
         CancellationToken cancellationToken)
     {
         var orders = await _dbContext.Orders.Include(x => x.OrderItems).Where(x => x.BuyerId == request.UserId)
-            .ToListAsync(cancellationToken: cancellationToken);
+            .ToListAsync(cancellationToken);
 
         if (!orders.Any())
             return Response<List<OrderDto>>.Success(new List<OrderDto>(), 200);

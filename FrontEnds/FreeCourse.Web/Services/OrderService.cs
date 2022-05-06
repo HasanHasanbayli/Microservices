@@ -84,9 +84,56 @@ public class OrderService : IOrderService
         return orderCreatedViewModel.Data;
     }
 
-    public Task SuspendOrder(CheckoutInfoInput checkoutInfoInput)
+    public async Task<OrderSuspendViewModel> SuspendOrder(CheckoutInfoInput checkoutInfoInput)
     {
-        throw new NotImplementedException();
+        var basket = await _basketService.Get();
+
+        OrderCreateInput orderCreateInput = new()
+        {
+            BuyerId = _sharedIdentityService.GetUserId,
+            Address = new AddressCreateInput
+            {
+                Province = checkoutInfoInput.Province,
+                District = checkoutInfoInput.District,
+                Street = checkoutInfoInput.Street,
+                Line = checkoutInfoInput.Line,
+                ZipCode = checkoutInfoInput.ZipCode
+            }
+        };
+
+        basket.BasketItem.ForEach(x =>
+        {
+            OrderItemCreateInput orderItem = new()
+            {
+                ProductId = x.CourseId,
+                Price = x.GetCurrentPrice,
+                PictureUrl = "",
+                ProductName = x.CourseName
+            };
+
+            orderCreateInput.OrderItems.Add(orderItem);
+        });
+
+        PaymentInfoInput paymentInfoInput = new()
+        {
+            CardName = checkoutInfoInput.CardName,
+            CardNumber = checkoutInfoInput.CardNumber,
+            Expiration = checkoutInfoInput.Expiration,
+            CVV = checkoutInfoInput.CVV,
+            TotalPrice = basket.TotalPrice,
+            Order = orderCreateInput
+        };
+
+        var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
+
+        if (!responsePayment)
+        {
+            return new OrderSuspendViewModel {Error = "Payment not received", IsSuccessful = false};
+        }
+
+        await _basketService.Delete();
+
+        return new OrderSuspendViewModel {IsSuccessful = true};
     }
 
     public async Task<List<OrderViewModel>> GetOrder()

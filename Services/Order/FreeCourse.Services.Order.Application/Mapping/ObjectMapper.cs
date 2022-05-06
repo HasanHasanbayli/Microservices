@@ -6,11 +6,8 @@ public static class ObjectMapper
 {
     private static readonly Lazy<IMapper> Lazy = new(() =>
     {
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<CustomMapping>();
-        });
-       
+        var config = new MapperConfiguration(cfg => { cfg.AddProfile<CustomMapping>(); });
+
         return config.CreateMapper();
     });
 
