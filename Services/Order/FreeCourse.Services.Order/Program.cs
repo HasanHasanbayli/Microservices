@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using FreeCourse.Services.Order.Application.Consumers;
 using FreeCourse.Services.Order.Application.Handlers;
 using FreeCourse.Services.Order.Infrastructure;
-using FreeCourse.Shared.Messages;
 using FreeCourse.Shared.Services;
 using MassTransit;
 using MediatR;

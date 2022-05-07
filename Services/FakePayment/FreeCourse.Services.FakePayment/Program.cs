@@ -23,13 +23,6 @@ services.AddMassTransit(x =>
 
 services.AddMassTransitHostedService();
 
-// builder.Services.Configure<MassTransitHostOptions>(options =>
-// {
-// options.WaitUntilStarted = true;
-// options.StartTimeout = TimeSpan.FromSeconds(30);
-// options.StopTimeout = TimeSpan.FromMinutes(1);
-// });
-
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

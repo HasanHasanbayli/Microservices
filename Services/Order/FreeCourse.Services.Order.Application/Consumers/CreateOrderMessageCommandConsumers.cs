@@ -15,22 +15,18 @@ public class CreateOrderMessageCommandConsumers : IConsumer<CreateOrderMessageCo
 
     public async Task Consume(ConsumeContext<CreateOrderMessageCommand> context)
     {
-        var newAddress = new Domain.OrderAggregate.Address(
-            context.Message.Province,
-            context.Message.District,
-            context.Message.Street,
-            context.Message.ZipCode,
-            context.Message.Line);
+        var newAddress = new Domain.OrderAggregate.Address(context.Message.Province, context.Message.District,
+            context.Message.Street, context.Message.ZipCode, context.Message.Line);
 
-        var order = new Domain.OrderAggregate.Order(context.Message.BuyerId, newAddress);
+        Domain.OrderAggregate.Order order = new Domain.OrderAggregate.Order(context.Message.BuyerId, newAddress);
 
-        context.Message.OrderItem.ForEach(x =>
+        context.Message.OrderItems.ForEach(x =>
         {
             order.AddOrderItem(x.ProductId, x.ProductName, x.Price, x.PictureUrl);
         });
 
         await _orderDbContext.Orders.AddAsync(order);
-        
+
         await _orderDbContext.SaveChangesAsync();
     }
 }

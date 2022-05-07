@@ -24,19 +24,18 @@ public class FakePaymentsController : CustomBaseController
     {
         var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:create-order-service"));
 
-        CreateOrderMessageCommand createOrderMessageCommand = new()
-        {
-            BuyerId = paymentDto.Order.BuyerId,
-            Province = paymentDto.Order.Address.Province,
-            District = paymentDto.Order.Address.District,
-            Street = paymentDto.Order.Address.Street,
-            Line = paymentDto.Order.Address.Line,
-            ZipCode = paymentDto.Order.Address.ZipCode
-        };
+        var createOrderMessageCommand = new CreateOrderMessageCommand();
+
+        createOrderMessageCommand.BuyerId = paymentDto.Order.BuyerId;
+        createOrderMessageCommand.Province = paymentDto.Order.Address.Province;
+        createOrderMessageCommand.District = paymentDto.Order.Address.District;
+        createOrderMessageCommand.Street = paymentDto.Order.Address.Street;
+        createOrderMessageCommand.Line = paymentDto.Order.Address.Line;
+        createOrderMessageCommand.ZipCode = paymentDto.Order.Address.ZipCode;
 
         paymentDto.Order.OrderItems.ForEach(x =>
         {
-            createOrderMessageCommand.OrderItem.Add(new OrderItem
+            createOrderMessageCommand.OrderItems.Add(new OrderItem
             {
                 PictureUrl = x.PictureUrl,
                 Price = x.Price,
