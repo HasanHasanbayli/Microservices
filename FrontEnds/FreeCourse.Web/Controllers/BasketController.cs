@@ -34,6 +34,7 @@ public class BasketController : Controller
             CourseName = course.Name,
             Price = course.Price
         };
+        
         await _basketService.AddBasketItem(basketItem);
 
         return RedirectToAction(nameof(Index));

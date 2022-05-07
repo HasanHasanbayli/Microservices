@@ -23,6 +23,7 @@ services.AddDbContext<OrderDbContext>(opt =>
 services.AddMassTransit(x =>
 {
     x.AddConsumer<CreateOrderMessageCommandConsumers>();
+    x.AddConsumer<CourseNameChangedEventConsumer>();
 
     // Default Port: 5672
     x.UsingRabbitMq((context, configurator) =>
@@ -34,9 +35,14 @@ services.AddMassTransit(x =>
         });
 
         configurator.ReceiveEndpoint("create-order-service", e =>
-            {
-                e.ConfigureConsumer<CreateOrderMessageCommandConsumers>(context);
-            });
+        {
+            e.ConfigureConsumer<CreateOrderMessageCommandConsumers>(context);
+        });
+        
+        configurator.ReceiveEndpoint("course-name-changed-event-order-service", e =>
+        {
+            e.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
+        });
     });
 });
 

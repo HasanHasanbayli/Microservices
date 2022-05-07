@@ -55,4 +55,9 @@ public class OrderController : Controller
 
         return View();
     }
+    
+    public async Task<IActionResult> CheckoutHistory()
+    {
+        return View(await _orderService.GetOrder());
+    }
 }

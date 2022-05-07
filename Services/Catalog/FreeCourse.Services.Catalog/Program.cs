@@ -1,7 +1,7 @@
 using FreeCourse.Services.Catalog.DTOs;
-using FreeCourse.Services.Catalog.Models;
 using FreeCourse.Services.Catalog.Services;
 using FreeCourse.Services.Catalog.Settings;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
@@ -20,6 +20,21 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
 services.AddControllers(
     options => { options.Filters.Add(new AuthorizeFilter()); }
 );
+
+services.AddMassTransit(x =>
+{
+    // Default Port: 5672
+    x.UsingRabbitMq((context, configurator) =>
+    {
+        configurator.Host(configuration["RabbitMQUrl"], "/", hostConfigurator =>
+        {
+            hostConfigurator.Username("guest");
+            hostConfigurator.Password("guest");
+        });
+    });
+});
+
+services.AddMassTransitHostedService();
 
 services.AddEndpointsApiExplorer();
 
