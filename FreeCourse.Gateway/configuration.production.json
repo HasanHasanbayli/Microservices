@@ -1,9 +1,145 @@
 {
-    "Logging": {
-        "LogLevel": {
-            "Default": "Debug",
-            "System": "Information",
-            "Microsoft": "Information"
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "catalog.api",
+          "Port": 80
         }
+      ],
+      "UpstreamPathTemplate": "/services/catalog/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamScheme": "http"
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "photostock.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/services/photostock/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "photo_stock_full_permission"
+        ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/services/basket/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "basket_full_permission"
+        ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "discount.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/services/discount/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "discount_full_permission"
+        ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/services/order/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "order_full_permission"
+        ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "fakepayment.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/services/fakepayment/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ],
+      "UpstreamScheme": "http",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "GatewayAuthenticationSchema",
+        "AllowedScopes": [
+          "payment_full_permission"
+        ]
+      }
     }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://gateway.api"
+  }
 }

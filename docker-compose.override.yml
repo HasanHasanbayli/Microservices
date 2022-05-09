@@ -1,0 +1,136 @@
+version: "3.8"
+services:
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - catalogdb_volume:/data/db
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379"
+  dicsountdb:
+    container_name: discountdb
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - discountdb_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=MyPass@word
+      - POSTGRES_DB=discountdb
+  identitydb:
+    container_name: identitydb
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+      - identitydb_volume:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=MyPass@word
+  orderdb:
+    container_name: orderdb
+    restart: always
+    ports:
+      - "1444:1433"
+    volumes:
+      - orderdb_volume:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=MyPass@word
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  catalog.api:
+    container_name: catalog.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RabbitMqUrl=rabbitmq
+      - IdentityServerUrl:http=//identityserver.api:5001
+      - DatabaseSettings:ConnectionString=mongodb://catalogdb:27017
+    ports:
+      - "5011:80"
+    depends_on:
+      - catalogdb
+  identityserver.api:
+    container_name: identityserver.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Server=identitydb,1433; 
+          Database=IdentityDb; User=sa; Password=MyPass@word;"
+    ports:
+      - "5001:80"
+    depends_on:
+      - identitydb
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerUrl=http://identityserver.api:5001
+      - RedisSettings:Port=6379
+      - RedisSettings:Port=basketdb
+    ports:
+      - "5013:80"
+    depends_on:
+      - basketdb
+  photostock.api:
+    container_name: photostock.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerUrl=http://identityserver.api:5001
+    ports:
+      - "5012:80"
+    volumes:
+      - type: bind
+        source: /Users/hasanhasanbayli/Desktop/Photos
+        target: /app/wwwroot/photos
+  discount.api:
+    container_name: discount.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerUrl=http://identityserver.api:5001
+      - "ConnectionStrings:PostgreSql=Server=discountdb; Port=5432; 
+          Database=DiscountDb; User ID=admin; Password=MyPass@word; 
+          Integrated Security=true; Pooling=true"
+    ports:
+      - "5014:80"
+    depends_on:
+      - dicsountdb
+  fakepayment.api:
+    container_name: fakepayment.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerUrl=http://identityserver.api:5001
+      - RabbitMqUrl=rabbitmq
+    ports:
+      - "5016:80"
+  order.api:
+    container_name: order.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerUrl=http://identityserver.api:5001
+      - "ConnectionStrings:DefaultConnection=Server=orderdb,1444; Database=OrderDb; User=sa; Password=MyPass@word;"
+      - RabbitMqUrl=rabbitmq
+    ports:
+      - "5015:80"
+    depends_on:
+      - orderdb
+  gateway.api:
+    container_name: gateway.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityServerUrl=http://identityserver.api:5001
+      - "ConnectionStrings:DefaultConnection=Server=orderdb,1444; Database=OrderDb; User=sa; Password=MyPass@word;"
+      - RabbitMqUrl=rabbitmq
+    ports:
+      - "5015:80"
+    depends_on:
+      - orderdb
