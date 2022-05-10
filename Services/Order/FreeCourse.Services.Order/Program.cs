@@ -34,15 +34,11 @@ services.AddMassTransit(x =>
             hostConfigurator.Password("guest");
         });
 
-        configurator.ReceiveEndpoint("create-order-service", e =>
-        {
-            e.ConfigureConsumer<CreateOrderMessageCommandConsumers>(context);
-        });
-        
-        configurator.ReceiveEndpoint("course-name-changed-event-order-service", e =>
-        {
-            e.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
-        });
+        configurator.ReceiveEndpoint("create-order-service",
+            e => { e.ConfigureConsumer<CreateOrderMessageCommandConsumers>(context); });
+
+        configurator.ReceiveEndpoint("course-name-changed-event-order-service",
+            e => { e.ConfigureConsumer<CourseNameChangedEventConsumer>(context); });
     });
 });
 
@@ -81,6 +77,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+#region User Seed Data In Project Startup
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var orderDbContext = serviceProvider.GetRequiredService<OrderDbContext>();
+    orderDbContext.Database.Migrate();
+}
+
+#endregion
 
 app.UseAuthentication();
 
