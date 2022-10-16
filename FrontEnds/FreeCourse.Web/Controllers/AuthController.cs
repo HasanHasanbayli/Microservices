@@ -15,6 +15,10 @@ public class AuthController : Controller
         _identityService = identityService;
     }
 
+    /// <summary>
+    /// Sign in
+    /// </summary>
+    /// <returns></returns>
     public IActionResult SignIn()
     {
         return View();
