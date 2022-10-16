@@ -11,8 +11,8 @@ namespace FreeCourse.Services.Catalog.Services;
 
 public class CourseService : ICourseService
 {
-    private readonly IMongoCollection<Course> _courseCollection;
     private readonly IMongoCollection<Category> _categoryCollection;
+    private readonly IMongoCollection<Course> _courseCollection;
     private readonly IMapper _mapper;
     private readonly IPublishEndpoint _publishEndpoint;
 
@@ -31,50 +31,35 @@ public class CourseService : ICourseService
         var courses = await _courseCollection.Find(course => true).ToListAsync();
 
         if (courses.Any())
-        {
             foreach (var course in courses)
-            {
                 course.Category = await _categoryCollection.Find(x => x.Id == course.CategoryId).FirstAsync();
-            }
-        }
         else
-        {
             courses = new List<Course>();
-        }
 
         return Shared.DTOs.Response<List<CourseDTO>>.Success(_mapper.Map<List<CourseDTO>>(courses), 200);
     }
 
     public async Task<Shared.DTOs.Response<CourseDTO>> GetByIdAsync(string id)
     {
-        var course = await _courseCollection.Find<Course>(x => x.Id == id).FirstOrDefaultAsync();
+        var course = await _courseCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        if (course == null)
-        {
-            return Shared.DTOs.Response<CourseDTO>.Fail("Course not found", 404);
-        }
+        if (course == null) return Shared.DTOs.Response<CourseDTO>.Fail("Course not found", 404);
 
         course.Category =
-            await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstOrDefaultAsync();
+            await _categoryCollection.Find(x => x.Id == course.CategoryId).FirstOrDefaultAsync();
 
         return Shared.DTOs.Response<CourseDTO>.Success(_mapper.Map<CourseDTO>(course), 200);
     }
 
     public async Task<Shared.DTOs.Response<List<CourseDTO>>> GetAllByUserId(string userId)
     {
-        var courses = await _courseCollection.Find<Course>(x => x.UserId == userId).ToListAsync();
+        var courses = await _courseCollection.Find(x => x.UserId == userId).ToListAsync();
 
         if (courses.Any())
-        {
             foreach (var course in courses)
-            {
-                course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstAsync();
-            }
-        }
+                course.Category = await _categoryCollection.Find(x => x.Id == course.CategoryId).FirstAsync();
         else
-        {
             courses = new List<Course>();
-        }
 
         return Shared.DTOs.Response<List<CourseDTO>>.Success(_mapper.Map<List<CourseDTO>>(courses), 200);
     }
@@ -96,16 +81,13 @@ public class CourseService : ICourseService
 
         var result = await _courseCollection.FindOneAndReplaceAsync(x => x.Id == courseUpdateDto.Id, updateCourse);
 
-        if (result == null)
-        {
-            return Shared.DTOs.Response<NoContent>.Fail("Course not found", 404);
-        }
+        if (result == null) return Shared.DTOs.Response<NoContent>.Fail("Course not found", 404);
 
         await _publishEndpoint.Publish(new CourseNameChangedEvent
         {
             CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name
         });
-            
+
         return Shared.DTOs.Response<NoContent>.Success(204);
     }
 

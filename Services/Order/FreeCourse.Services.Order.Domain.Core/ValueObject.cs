@@ -20,7 +20,7 @@ public abstract class ValueObject
     {
         if (obj == null || obj.GetType() != GetType()) return false;
 
-        var other = (ValueObject) obj;
+        var other = (ValueObject)obj;
 
         return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }

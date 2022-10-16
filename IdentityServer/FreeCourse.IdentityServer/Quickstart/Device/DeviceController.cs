@@ -1,6 +1,7 @@
 using FreeCourse.IdentityServer.Quickstart;
 using FreeCourse.IdentityServer.Quickstart.Consent;
 using FreeCourse.IdentityServer.Quickstart.Device;
+using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -17,10 +18,10 @@ namespace IdentityServerHost.Quickstart.UI;
 [SecurityHeaders]
 public class DeviceController : Controller
 {
-    private readonly IDeviceFlowInteractionService _interaction;
     private readonly IEventService _events;
-    private readonly IOptions<IdentityServerOptions> _options;
+    private readonly IDeviceFlowInteractionService _interaction;
     private readonly ILogger<DeviceController> _logger;
+    private readonly IOptions<IdentityServerOptions> _options;
 
     public DeviceController(
         IDeviceFlowInteractionService interaction,
@@ -37,7 +38,7 @@ public class DeviceController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        string userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
+        var userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
         string userCode = Request.Query[userCodeParamName];
         if (string.IsNullOrWhiteSpace(userCode)) return View("UserCodeCapture");
 
@@ -82,7 +83,7 @@ public class DeviceController : Controller
         // user clicked 'no' - send back the standard 'access_denied' response
         if (model.Button == "no")
         {
-            grantedConsent = new ConsentResponse {Error = AuthorizationError.AccessDenied};
+            grantedConsent = new ConsentResponse { Error = AuthorizationError.AccessDenied };
 
             // emit event
             await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId,
@@ -96,10 +97,8 @@ public class DeviceController : Controller
             {
                 var scopes = model.ScopesConsented;
                 if (ConsentOptions.EnableOfflineAccess == false)
-                {
                     scopes = scopes.Where(
-                        x => x != IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess);
-                }
+                        x => x != IdentityServerConstants.StandardScopes.OfflineAccess);
 
                 grantedConsent = new ConsentResponse
                 {
@@ -145,10 +144,7 @@ public class DeviceController : Controller
         DeviceAuthorizationInputModel model = null)
     {
         var request = await _interaction.GetAuthorizationContextAsync(userCode);
-        if (request != null)
-        {
-            return CreateConsentViewModel(userCode, model, request);
-        }
+        if (request != null) return CreateConsentViewModel(userCode, model, request);
 
         return null;
     }
@@ -186,11 +182,9 @@ public class DeviceController : Controller
         }
 
         if (ConsentOptions.EnableOfflineAccess && request.ValidatedResources.Resources.OfflineAccess)
-        {
             apiScopes.Add(GetOfflineAccessScope(
-                vm.ScopesConsented.Contains(IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess) ||
+                vm.ScopesConsented.Contains(IdentityServerConstants.StandardScopes.OfflineAccess) ||
                 model == null));
-        }
 
         vm.ApiScopes = apiScopes;
 
@@ -227,7 +221,7 @@ public class DeviceController : Controller
     {
         return new ScopeViewModel
         {
-            Value = IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess,
+            Value = IdentityServerConstants.StandardScopes.OfflineAccess,
             DisplayName = ConsentOptions.OfflineAccessDisplayName,
             Description = ConsentOptions.OfflineAccessDescription,
             Emphasize = true,

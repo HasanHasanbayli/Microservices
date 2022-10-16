@@ -10,10 +10,10 @@ public class UserService : IUserService
     public UserService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-    } 
+    }
 
     public async Task<UserViewModel> GetUser()
     {
-        return  _httpClient.GetFromJsonAsync<UserViewModel>("/api/auth/getuser").Result;
+        return _httpClient.GetFromJsonAsync<UserViewModel>("/api/auth/getuser").Result;
     }
 }

@@ -9,9 +9,8 @@ namespace FreeCourse.Web.Controllers;
 [Authorize]
 public class BasketController : Controller
 {
-    private readonly ICatalogService _catalogService;
-
     private readonly IBasketService _basketService;
+    private readonly ICatalogService _catalogService;
 
     public BasketController(ICatalogService catalogService, IBasketService basketService)
     {
@@ -34,7 +33,7 @@ public class BasketController : Controller
             CourseName = course.Name,
             Price = course.Price
         };
-        
+
         await _basketService.AddBasketItem(basketItem);
 
         return RedirectToAction(nameof(Index));

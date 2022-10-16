@@ -5,14 +5,14 @@ namespace FreeCourse.Web.Services.Interfaces;
 public interface IOrderService
 {
     /// <summary>
-    /// Synchronous communication
+    ///     Synchronous communication
     /// </summary>
     /// <param name="checkoutInfoInput"></param>
     /// <returns></returns>
     Task<OrderCreatedViewModel> CreateOrder(CheckoutInfoInput checkoutInfoInput);
-    
+
     /// <summary>
-    /// Asynchronous communication
+    ///     Asynchronous communication
     /// </summary>
     /// <param name="checkoutInfoInput"></param>
     /// <returns></returns>

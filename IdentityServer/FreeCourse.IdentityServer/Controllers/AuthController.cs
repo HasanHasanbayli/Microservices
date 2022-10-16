@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
 
         if (user == null)
             return BadRequest();
-        
+
         return Ok(new
         {
             user.Id,

@@ -1,6 +1,4 @@
-﻿using IdentityServerHost.Quickstart.UI;
-
-namespace FreeCourse.IdentityServer.Quickstart.Account;
+﻿namespace FreeCourse.IdentityServer.Quickstart.Account;
 
 public class LogoutViewModel : LogoutInputModel
 {

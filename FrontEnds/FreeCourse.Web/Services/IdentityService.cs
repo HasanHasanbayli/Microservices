@@ -14,9 +14,9 @@ namespace FreeCourse.Web.Services;
 
 public class IdentityService : IIdentityService
 {
+    private readonly ClientSettings _clientSettings;
     private readonly HttpClient _httpClient;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ClientSettings _clientSettings;
     private readonly ServiceApiSettings _serviceApiSettings;
 
     public IdentityService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor,
@@ -33,13 +33,10 @@ public class IdentityService : IIdentityService
         var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
             Address = _serviceApiSettings.IdentityBaseUri,
-            Policy = new DiscoveryPolicy {RequireHttps = false}
+            Policy = new DiscoveryPolicy { RequireHttps = false }
         });
 
-        if (disco.IsError)
-        {
-            throw disco.Exception;
-        }
+        if (disco.IsError) throw disco.Exception;
 
         var passwordTokenRequest = new PasswordTokenRequest
         {
@@ -61,7 +58,7 @@ public class IdentityService : IIdentityService
                 PropertyNameCaseInsensitive = true
             });
 
-            return Response<bool>.Fail(errorDto.Errors, 400);
+            return Response<bool>.Fail(errorDto!.Errors, 400);
         }
 
         var userInfoRequest = new UserInfoRequest
@@ -72,10 +69,7 @@ public class IdentityService : IIdentityService
 
         var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);
 
-        if (userInfo.IsError)
-        {
-            throw userInfo.Exception;
-        }
+        if (userInfo.IsError) throw userInfo.Exception;
 
         var claimsIdentity = new ClaimsIdentity(userInfo.Claims,
             CookieAuthenticationDefaults.AuthenticationScheme, "name", "role");
@@ -86,8 +80,8 @@ public class IdentityService : IIdentityService
 
         authenticationProperties.StoreTokens(new List<AuthenticationToken>
         {
-            new() {Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken},
-            new() {Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken},
+            new() { Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken },
+            new() { Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken },
             new()
             {
                 Name = OpenIdConnectParameterNames.ExpiresIn,
@@ -97,7 +91,7 @@ public class IdentityService : IIdentityService
 
         authenticationProperties.IsPersistent = loginRequest.IsRemember;
 
-        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+        await _httpContextAccessor.HttpContext!.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
             claimsPrincipal, authenticationProperties);
 
         return Response<bool>.Success(200);
@@ -108,16 +102,13 @@ public class IdentityService : IIdentityService
         var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
             Address = _serviceApiSettings.IdentityBaseUri,
-            Policy = new DiscoveryPolicy {RequireHttps = false}
+            Policy = new DiscoveryPolicy { RequireHttps = false }
         });
 
-        if (disco.IsError)
-        {
-            throw disco.Exception;
-        }
+        if (disco.IsError) throw disco.Exception;
 
         var refreshToken =
-            await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+            await _httpContextAccessor.HttpContext!.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
 
         RefreshTokenRequest refreshTokenRequest = new()
         {
@@ -129,15 +120,12 @@ public class IdentityService : IIdentityService
 
         var token = await _httpClient.RequestRefreshTokenAsync(refreshTokenRequest);
 
-        if (token.IsError)
-        {
-            return null;
-        }
+        if (token.IsError) return null!;
 
         var authenticationTokens = new List<AuthenticationToken>
         {
-            new() {Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken},
-            new() {Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken},
+            new() { Name = OpenIdConnectParameterNames.AccessToken, Value = token.AccessToken },
+            new() { Name = OpenIdConnectParameterNames.RefreshToken, Value = token.RefreshToken },
             new()
             {
                 Name = OpenIdConnectParameterNames.ExpiresIn,
@@ -145,14 +133,14 @@ public class IdentityService : IIdentityService
             }
         };
 
-        var authenticationResult = await _httpContextAccessor.HttpContext.AuthenticateAsync();
+        var authenticationResult = await _httpContextAccessor.HttpContext!.AuthenticateAsync();
 
         var properties = authenticationResult.Properties;
 
-        properties.StoreTokens(authenticationTokens);
+        properties!.StoreTokens(authenticationTokens);
 
-        await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-            authenticationResult.Principal, properties);
+        await _httpContextAccessor.HttpContext!.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            authenticationResult.Principal!, properties);
 
         return token;
     }
@@ -162,16 +150,13 @@ public class IdentityService : IIdentityService
         var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
             Address = _serviceApiSettings.IdentityBaseUri,
-            Policy = new DiscoveryPolicy {RequireHttps = false}
+            Policy = new DiscoveryPolicy { RequireHttps = false }
         });
 
-        if (disco.IsError)
-        {
-            throw disco.Exception;
-        }
+        if (disco.IsError) throw disco.Exception;
 
         var refreshToken =
-            await _httpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+            await _httpContextAccessor.HttpContext!.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
 
         TokenRevocationRequest tokenRevocationRequest = new()
         {

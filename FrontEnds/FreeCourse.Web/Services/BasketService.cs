@@ -6,8 +6,8 @@ namespace FreeCourse.Web.Services;
 
 public class BasketService : IBasketService
 {
-    private readonly HttpClient _httpClient;
     private readonly IDiscountService _discountService;
+    private readonly HttpClient _httpClient;
 
     public BasketService(HttpClient httpClient, IDiscountService discountService)
     {
@@ -26,10 +26,7 @@ public class BasketService : IBasketService
     {
         var response = await _httpClient.GetAsync("basket");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var basketViewModel = await response.Content.ReadFromJsonAsync<Response<BasketViewModel>>();
 
@@ -64,29 +61,17 @@ public class BasketService : IBasketService
     {
         var basket = await Get();
 
-        if (basket == null)
-        {
-            return false;
-        }
+        if (basket == null) return false;
 
         var deleteBasketItem = basket.BasketItem.FirstOrDefault(x => x.CourseId == courseId);
 
-        if (deleteBasketItem == null)
-        {
-            return false;
-        }
+        if (deleteBasketItem == null) return false;
 
         var deleteResult = basket.BasketItem.Remove(deleteBasketItem);
 
-        if (!deleteResult)
-        {
-            return false;
-        }
+        if (!deleteResult) return false;
 
-        if (!basket.BasketItem.Any())
-        {
-            basket.DiscountCode = null;
-        }
+        if (!basket.BasketItem.Any()) basket.DiscountCode = null;
 
         return await SaveOrUpdate(basket);
     }
@@ -97,17 +82,11 @@ public class BasketService : IBasketService
 
         var basket = await Get();
 
-        if (basket == null)
-        {
-            return false;
-        }
+        if (basket == null) return false;
 
         var hasDiscount = await _discountService.GetDiscount(discountCode);
 
-        if (hasDiscount == null)
-        {
-            return false;
-        }
+        if (hasDiscount == null) return false;
 
         basket.ApplyDiscount(hasDiscount.Code, hasDiscount.Rate);
 
@@ -120,10 +99,7 @@ public class BasketService : IBasketService
     {
         var basket = await Get();
 
-        if (basket == null || basket.DiscountCode == null)
-        {
-            return false;
-        }
+        if (basket == null || basket.DiscountCode == null) return false;
 
         basket.CancelDiscount();
 

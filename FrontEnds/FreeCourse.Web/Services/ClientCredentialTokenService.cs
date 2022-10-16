@@ -8,10 +8,10 @@ namespace FreeCourse.Web.Services;
 
 public class ClientCredentialTokenService : IClientCredentialTokenService
 {
-    private readonly ServiceApiSettings _serviceApiSettings;
-    private readonly ClientSettings _clientSettings;
     private readonly IClientAccessTokenCache _clientAccessTokenCache;
+    private readonly ClientSettings _clientSettings;
     private readonly HttpClient _httpClient;
+    private readonly ServiceApiSettings _serviceApiSettings;
 
     public ClientCredentialTokenService(IOptions<ServiceApiSettings> serviceApiSettings,
         IOptions<ClientSettings> clientSettings,
@@ -27,21 +27,15 @@ public class ClientCredentialTokenService : IClientCredentialTokenService
     {
         var currentToken = await _clientAccessTokenCache.GetAsync("WebClientToken", default!);
 
-        if (currentToken != null)
-        {
-            return currentToken.AccessToken;
-        }
+        if (currentToken != null) return currentToken.AccessToken;
 
         var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
             Address = _serviceApiSettings.IdentityBaseUri,
-            Policy = new DiscoveryPolicy {RequireHttps = false}
+            Policy = new DiscoveryPolicy { RequireHttps = false }
         });
 
-        if (disco.IsError)
-        {
-            throw disco.Exception;
-        }
+        if (disco.IsError) throw disco.Exception;
 
         ClientCredentialsTokenRequest clientCredentialTokenRequest = new()
         {
@@ -52,10 +46,7 @@ public class ClientCredentialTokenService : IClientCredentialTokenService
 
         var newToken = await _httpClient.RequestClientCredentialsTokenAsync(clientCredentialTokenRequest);
 
-        if (newToken.IsError)
-        {
-            throw newToken.Exception;
-        }
+        if (newToken.IsError) throw newToken.Exception;
 
         await _clientAccessTokenCache.SetAsync("WebClientToken", newToken.AccessToken, newToken.ExpiresIn, default!);
 

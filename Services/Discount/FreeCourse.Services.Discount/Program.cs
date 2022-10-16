@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-IServiceCollection services = builder.Services;
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 services.AddHttpContextAccessor();
@@ -25,16 +25,13 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
 
 var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 
-services.AddControllers(options =>
-{
-    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
-});
+services.AddControllers(options => { options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy)); });
 
 services.AddEndpointsApiExplorer();
 
 services.AddSwaggerGen();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

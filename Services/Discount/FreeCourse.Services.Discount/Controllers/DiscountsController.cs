@@ -48,13 +48,13 @@ public class DiscountsController : CustomBaseController
     {
         return CreateActionResultInstance(await _discountService.Save(discount));
     }
-    
+
     [HttpPut]
     public async Task<IActionResult> Update(Models.Discount discount)
     {
         return CreateActionResultInstance(await _discountService.Update(discount));
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

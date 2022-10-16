@@ -20,12 +20,10 @@ public class GetOrdersByUserIdQueryHandler : IRequestHandler<GetOrdersByUserIdQu
     public async Task<Response<List<OrderDto>>> Handle(GetOrdersByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        var orders = await _dbContext.Orders.Include(x => x.OrderItems).Where(x => x.BuyerId == request.UserId).ToListAsync();
+        var orders = await _dbContext.Orders.Include(x => x.OrderItems).Where(x => x.BuyerId == request.UserId)
+            .ToListAsync();
 
-        if (!orders.Any())
-        {
-            return Response<List<OrderDto>>.Success(new List<OrderDto>(), 200);
-        }
+        if (!orders.Any()) return Response<List<OrderDto>>.Success(new List<OrderDto>(), 200);
 
         var ordersDto = ObjectMapper.Mapper.Map<List<OrderDto>>(orders);
 

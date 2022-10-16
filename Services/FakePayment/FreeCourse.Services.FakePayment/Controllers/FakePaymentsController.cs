@@ -4,7 +4,6 @@ using FreeCourse.Shared.DTOs;
 using FreeCourse.Shared.Messages;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OrderItem = FreeCourse.Shared.Messages.OrderItem;
 
 namespace FreeCourse.Services.FakePayment.Controllers;
 

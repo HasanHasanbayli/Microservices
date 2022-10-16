@@ -7,7 +7,7 @@ public class CheckoutInfoInput
     public string Street { get; set; }
     public string ZipCode { get; set; }
     public string Line { get; set; }
-    
+
     public string CardName { get; set; }
     public string CardNumber { get; set; }
     public string Expiration { get; set; }

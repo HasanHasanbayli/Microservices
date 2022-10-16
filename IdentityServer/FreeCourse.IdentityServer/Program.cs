@@ -6,8 +6,8 @@ using IdentityServer4;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-IServiceCollection services = builder.Services;
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 services.AddLocalApiAuthentication();
@@ -47,7 +47,7 @@ services.AddAuthentication()
         options.ClientSecret = "copy client secret from Google here";
     });
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -76,13 +76,11 @@ try
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         if (!userManager.Users.Any())
-        {
             userManager.CreateAsync(new ApplicationUser
             {
                 UserName = "hasanhasanbayli", FirstName = "Hasan", LastName = "Hasanbayli",
                 Email = "hasanhasanbeyli@gmail.com"
             }, "Password12*").Wait();
-        }
     }
 }
 catch (Exception e)

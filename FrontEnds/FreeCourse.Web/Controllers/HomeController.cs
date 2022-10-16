@@ -1,16 +1,16 @@
 ﻿using System.Diagnostics;
 using FreeCourse.Web.Exceptions;
-using Microsoft.AspNetCore.Mvc;
 using FreeCourse.Web.Models;
 using FreeCourse.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FreeCourse.Web.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly ICatalogService _catalogService;
+    private readonly ILogger<HomeController> _logger;
 
     public HomeController(ILogger<HomeController> logger, ICatalogService catalogService)
     {
@@ -39,10 +39,8 @@ public class HomeController : Controller
         var errorFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
         if (errorFeature != null && errorFeature.Error is UnAuthorizeException)
-        {
             return RedirectToAction(nameof(AuthController.Logout), "Auth");
-        }
 
-        return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

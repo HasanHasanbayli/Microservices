@@ -42,10 +42,7 @@ public class ResourceOwnerPasswordTokenHandler : DelegatingHandler
             }
         }
 
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            throw new UnAuthorizeException();
-        }
+        if (response.StatusCode == HttpStatusCode.Unauthorized) throw new UnAuthorizeException();
 
         return response;
     }

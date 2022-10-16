@@ -38,7 +38,7 @@ public class CoursesController : Controller
     {
         if (!ModelState.IsValid)
             return View();
-        
+
         var categories = await _catalogService.GetAllCategoryAsync();
 
         ViewBag.categoryList = new SelectList(categories, "Id", "Name");
@@ -56,10 +56,7 @@ public class CoursesController : Controller
 
         var categories = await _catalogService.GetAllCategoryAsync();
 
-        if (course == null)
-        {
-            RedirectToAction(nameof(Index));
-        }
+        if (course == null) RedirectToAction(nameof(Index));
 
         ViewBag.categoryList = new SelectList(categories, "Id", "Name");
 

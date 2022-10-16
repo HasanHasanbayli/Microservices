@@ -1,6 +1,4 @@
-﻿using FreeCourse.Services.Catalog.Models;
-
-namespace FreeCourse.Services.Catalog.DTOs;
+﻿namespace FreeCourse.Services.Catalog.DTOs;
 
 public class CourseDTO
 {
@@ -13,7 +11,7 @@ public class CourseDTO
     public decimal Price { get; set; }
 
     public string Picture { get; set; }
-    
+
     public string UserId { get; set; }
 
     public DateTime CreatedDate { get; set; }

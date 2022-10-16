@@ -8,8 +8,8 @@ namespace FreeCourse.Web.Services;
 public class CatalogService : ICatalogService
 {
     private readonly HttpClient _httpClient;
-    private readonly IPhotoStockService _photoStockService;
     private readonly PhotoHelper _photoHelper;
+    private readonly IPhotoStockService _photoStockService;
 
     public CatalogService(HttpClient httpClient, IPhotoStockService photoStockService, PhotoHelper photoHelper)
     {
@@ -22,17 +22,11 @@ public class CatalogService : ICatalogService
     {
         var response = await _httpClient.GetAsync("courses");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var responseSuccess = await response.Content.ReadFromJsonAsync<Response<List<CourseViewModel>>>();
 
-        responseSuccess.Data.ForEach(x =>
-        {
-            x.StockPictureUrl = _photoHelper.GetPhotoStockUrl(x.Picture);
-        });
+        responseSuccess.Data.ForEach(x => { x.StockPictureUrl = _photoHelper.GetPhotoStockUrl(x.Picture); });
 
         return responseSuccess.Data;
     }
@@ -41,10 +35,7 @@ public class CatalogService : ICatalogService
     {
         var response = await _httpClient.GetAsync("categories");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var responseSuccess = await response.Content.ReadFromJsonAsync<Response<List<CategoryViewModel>>>();
 
@@ -55,17 +46,11 @@ public class CatalogService : ICatalogService
     {
         var response = await _httpClient.GetAsync($"courses/GetAllByUserId/{userId}");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var responseSuccess = await response.Content.ReadFromJsonAsync<Response<List<CourseViewModel>>>();
 
-        responseSuccess.Data.ForEach(x =>
-        {
-            x.StockPictureUrl = _photoHelper.GetPhotoStockUrl(x.Picture);
-        });
+        responseSuccess.Data.ForEach(x => { x.StockPictureUrl = _photoHelper.GetPhotoStockUrl(x.Picture); });
 
         return responseSuccess.Data;
     }
@@ -74,10 +59,7 @@ public class CatalogService : ICatalogService
     {
         var response = await _httpClient.GetAsync($"courses/{courseId}");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var responseSuccess = await response.Content.ReadFromJsonAsync<Response<CourseViewModel>>();
 
@@ -90,10 +72,7 @@ public class CatalogService : ICatalogService
     {
         var resultPhotoService = await _photoStockService.UploadPhoto(courseCreateInput.PhotoFromFile);
 
-        if (resultPhotoService != null)
-        {
-            courseCreateInput.Picture = resultPhotoService.Url;
-        }
+        if (resultPhotoService != null) courseCreateInput.Picture = resultPhotoService.Url;
 
         var response = await _httpClient.PostAsJsonAsync("courses", courseCreateInput);
 
