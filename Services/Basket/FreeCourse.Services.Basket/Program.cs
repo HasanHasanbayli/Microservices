@@ -12,13 +12,19 @@ IServiceCollection services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Authority = configuration["IdentityServerUrl"];
     options.Audience = "resource_basket";
     options.RequireHttpsMetadata = false;
+});
+
+AuthorizationPolicy requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+services.AddControllers(options =>
+{
+    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
 });
 
 services.AddHttpContextAccessor();
@@ -40,10 +46,7 @@ services.AddSingleton(sp =>
     return redis;
 });
 
-services.AddControllers(options =>
-{
-    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
-});
+services.AddControllers();
 
 services.AddEndpointsApiExplorer();
 
@@ -56,8 +59,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseRouting();
 
 app.UseHttpsRedirection();
 

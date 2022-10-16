@@ -2,6 +2,5 @@
 .vs
 **/bin
 **/obj
-**/appsettings.json
 Services/PhotoStock/FreeCourse.Services.PhotoStock/wwwroot/**
 UdemyMicroservices.sln.DotSettings.user

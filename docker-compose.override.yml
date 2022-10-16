@@ -54,7 +54,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - RabbitMqUrl=rabbitmq
-      - IdentityServerUrl=http://identityserver.api
+      - IdentityServerUrl:http=//identityserver.api
       - DatabaseSettings:ConnectionString=mongodb://catalogdb:27017
     ports:
       - "5011:80"
@@ -90,7 +90,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - IdentityServerUrl=http://identityserver.api
       - RedisSettings:Port=6379
-      - RedisSettings:Host=basketdb
+      - RedisSettings:Port=basketdb
     ports:
       - "5013:80"
     depends_on:
