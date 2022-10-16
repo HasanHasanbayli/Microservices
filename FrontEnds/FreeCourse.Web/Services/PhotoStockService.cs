@@ -15,10 +15,7 @@ public class PhotoStockService : IPhotoStockService
 
     public async Task<PhotoViewModel?> UploadPhoto(IFormFile photo)
     {
-        if (photo == null || photo.Length <= 0)
-        {
-            return null;
-        }
+        if (photo == null || photo.Length <= 0) return null;
 
         var randomFileName = $"{Guid.NewGuid().ToString()}{Path.GetExtension(photo.FileName)}";
 
@@ -32,10 +29,7 @@ public class PhotoStockService : IPhotoStockService
 
         var response = await _httpClient.PostAsync("photos", multipartFormDataContent);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var responseSuccess = await response.Content.ReadFromJsonAsync<Response<PhotoViewModel>>();
 

@@ -17,10 +17,7 @@ public class DiscountService : IDiscountService
     {
         var response = await _httpClient.GetAsync($"Discounts/GetByCode/{discountCode}");
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (!response.IsSuccessStatusCode) return null;
 
         var discount = await response.Content.ReadFromJsonAsync<Response<DiscountViewModel>>();
 

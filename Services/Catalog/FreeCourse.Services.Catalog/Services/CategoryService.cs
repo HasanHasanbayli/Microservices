@@ -38,7 +38,7 @@ public class CategoryService : ICategoryService
 
     public async Task<Response<CategoryDTO>> GetByIdAsync(string id)
     {
-        var category = await _categoryCollection.Find<Category>(x => x.Id == id).FirstOrDefaultAsync();
+        var category = await _categoryCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         return category == null
             ? Response<CategoryDTO>.Fail("Category not found", 404)

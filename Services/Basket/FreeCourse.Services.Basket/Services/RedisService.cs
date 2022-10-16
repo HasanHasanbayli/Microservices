@@ -14,7 +14,13 @@ public class RedisService
         _port = port;
     }
 
-    public void Connect() => _connectionMultiplexer = ConnectionMultiplexer.Connect($"{_host}:{_port}");
+    public void Connect()
+    {
+        _connectionMultiplexer = ConnectionMultiplexer.Connect($"{_host}:{_port}");
+    }
 
-    public IDatabase GetDb(int db = 1) => _connectionMultiplexer.GetDatabase(db);
+    public IDatabase GetDb(int db = 1)
+    {
+        return _connectionMultiplexer.GetDatabase(db);
+    }
 }

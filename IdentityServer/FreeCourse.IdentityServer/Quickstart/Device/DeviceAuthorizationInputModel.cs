@@ -1,5 +1,4 @@
 using FreeCourse.IdentityServer.Quickstart.Consent;
-using IdentityServerHost.Quickstart.UI;
 
 namespace FreeCourse.IdentityServer.Quickstart.Device;
 

@@ -27,7 +27,7 @@ public class DiscountService : IDiscountService
     public async Task<Response<Models.Discount>> GetById(int id)
     {
         var discount =
-            (await _dbConnection.QueryAsync<Models.Discount>("Select * from discount where id=@Id", new {Id = id}))
+            (await _dbConnection.QueryAsync<Models.Discount>("Select * from discount where id=@Id", new { Id = id }))
             .SingleOrDefault();
 
         return discount == null
@@ -50,7 +50,7 @@ public class DiscountService : IDiscountService
     {
         var status =
             await _dbConnection.ExecuteAsync("UPDATE discount set userId=@UserId, rate=@Rate, code=@Code where id=@Id",
-                new {Id = discount.Id, UserId = discount.UserId, Rate = discount.Rate, Code = discount.Code});
+                new { discount.Id, discount.UserId, discount.Rate, discount.Code });
 
         return status > 0
             ? Response<NoContent>.Success(204)
@@ -60,7 +60,7 @@ public class DiscountService : IDiscountService
     public async Task<Response<NoContent>> Delete(int id)
     {
         var status =
-            await _dbConnection.ExecuteAsync("DELETE from discount where id=@Id", new {Id = id});
+            await _dbConnection.ExecuteAsync("DELETE from discount where id=@Id", new { Id = id });
 
         return status > 0
             ? Response<NoContent>.Success(204)
@@ -71,7 +71,7 @@ public class DiscountService : IDiscountService
     {
         var discount =
             await _dbConnection.QueryAsync<Models.Discount>(
-                "Select * from discount where userId=@UserId and code=@Code", new {UserId = userId, Code = code});
+                "Select * from discount where userId=@UserId and code=@Code", new { UserId = userId, Code = code });
 
         var hasDiscount = discount.FirstOrDefault();
 

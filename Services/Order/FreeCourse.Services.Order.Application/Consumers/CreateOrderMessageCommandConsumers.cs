@@ -1,4 +1,5 @@
-﻿using FreeCourse.Services.Order.Infrastructure;
+﻿using FreeCourse.Services.Order.Domain.OrderAggregate;
+using FreeCourse.Services.Order.Infrastructure;
 using FreeCourse.Shared.Messages;
 using MassTransit;
 
@@ -15,10 +16,10 @@ public class CreateOrderMessageCommandConsumers : IConsumer<CreateOrderMessageCo
 
     public async Task Consume(ConsumeContext<CreateOrderMessageCommand> context)
     {
-        var newAddress = new Domain.OrderAggregate.Address(context.Message.Province, context.Message.District,
+        var newAddress = new Address(context.Message.Province, context.Message.District,
             context.Message.Street, context.Message.ZipCode, context.Message.Line);
 
-        Domain.OrderAggregate.Order order = new Domain.OrderAggregate.Order(context.Message.BuyerId, newAddress);
+        var order = new Domain.OrderAggregate.Order(context.Message.BuyerId, newAddress);
 
         context.Message.OrderItems.ForEach(x =>
         {

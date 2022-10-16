@@ -8,9 +8,9 @@ namespace FreeCourse.Web.Services;
 
 public class OrderService : IOrderService
 {
-    private readonly IPaymentService _paymentService;
-    private readonly HttpClient _httpClient;
     private readonly IBasketService _basketService;
+    private readonly HttpClient _httpClient;
+    private readonly IPaymentService _paymentService;
     private readonly ISharedIdentityService _sharedIdentityService;
 
     public OrderService(IPaymentService paymentService, HttpClient httpClient, IBasketService basketService,
@@ -37,10 +37,7 @@ public class OrderService : IOrderService
 
         var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
 
-        if (!responsePayment)
-        {
-            return new OrderCreatedViewModel {Error = "Payment not received", IsSuccessful = false};
-        }
+        if (!responsePayment) return new OrderCreatedViewModel { Error = "Payment not received", IsSuccessful = false };
 
         OrderCreateInput orderCreateInput = new()
         {
@@ -71,9 +68,7 @@ public class OrderService : IOrderService
         var response = await _httpClient.PostAsJsonAsync("orders", orderCreateInput);
 
         if (!response.IsSuccessStatusCode)
-        {
-            return new OrderCreatedViewModel {Error = "Failed to create order", IsSuccessful = false};
-        }
+            return new OrderCreatedViewModel { Error = "Failed to create order", IsSuccessful = false };
 
         var orderCreatedViewModel = await response.Content.ReadFromJsonAsync<Response<OrderCreatedViewModel>>();
 
@@ -126,14 +121,11 @@ public class OrderService : IOrderService
 
         var responsePayment = await _paymentService.ReceivePayment(paymentInfoInput);
 
-        if (!responsePayment)
-        {
-            return new OrderSuspendViewModel {Error = "Payment not received", IsSuccessful = false};
-        }
+        if (!responsePayment) return new OrderSuspendViewModel { Error = "Payment not received", IsSuccessful = false };
 
         await _basketService.Delete();
 
-        return new OrderSuspendViewModel {IsSuccessful = true};
+        return new OrderSuspendViewModel { IsSuccessful = true };
     }
 
     public async Task<List<OrderViewModel>> GetOrder()

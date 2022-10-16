@@ -22,7 +22,7 @@ public class IdentityResourceOwnerPasswordValidator : IResourceOwnerPasswordVali
         {
             var errors = new Dictionary<string, object>();
 
-            errors.Add("errors", new List<string> {"Email or password incorrect"});
+            errors.Add("errors", new List<string> { "Email or password incorrect" });
 
             context.Result.CustomResponse = errors;
 
@@ -35,7 +35,7 @@ public class IdentityResourceOwnerPasswordValidator : IResourceOwnerPasswordVali
         {
             var errors = new Dictionary<string, object>();
 
-            errors.Add("errors", new List<string> {"Email or password incorrect"});
+            errors.Add("errors", new List<string> { "Email or password incorrect" });
 
             context.Result.CustomResponse = errors;
 

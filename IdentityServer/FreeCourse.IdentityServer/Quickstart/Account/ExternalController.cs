@@ -16,12 +16,12 @@ namespace FreeCourse.IdentityServer.Quickstart.Account;
 [AllowAnonymous]
 public class ExternalController : Controller
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IIdentityServerInteractionService _interaction;
     private readonly IClientStore _clientStore;
     private readonly IEventService _events;
+    private readonly IIdentityServerInteractionService _interaction;
     private readonly ILogger<ExternalController> _logger;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public ExternalController(
         UserManager<ApplicationUser> userManager,
@@ -40,7 +40,7 @@ public class ExternalController : Controller
     }
 
     /// <summary>
-    /// initiate roundtrip to external authentication provider
+    ///     initiate roundtrip to external authentication provider
     /// </summary>
     [HttpGet]
     public IActionResult Challenge(string scheme, string returnUrl)
@@ -49,38 +49,32 @@ public class ExternalController : Controller
 
         // validate returnUrl - either it is a valid OIDC URL or back to a local page
         if (Url.IsLocalUrl(returnUrl) == false && _interaction.IsValidReturnUrl(returnUrl) == false)
-        {
             // user might have clicked on a malicious link - should be logged
             throw new Exception("invalid return URL");
-        }
-            
+
         // start challenge and roundtrip the return URL and scheme 
         var props = new AuthenticationProperties
         {
-            RedirectUri = Url.Action(nameof(Callback)), 
+            RedirectUri = Url.Action(nameof(Callback)),
             Items =
             {
-                { "returnUrl", returnUrl }, 
-                { "scheme", scheme },
+                { "returnUrl", returnUrl },
+                { "scheme", scheme }
             }
         };
 
         return Challenge(props, scheme);
-            
     }
 
     /// <summary>
-    /// Post processing of external authentication
+    ///     Post processing of external authentication
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> Callback()
     {
         // read external identity from the temporary cookie
         var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-        if (result?.Succeeded != true)
-        {
-            throw new Exception("External authentication error");
-        }
+        if (result?.Succeeded != true) throw new Exception("External authentication error");
 
         if (_logger.IsEnabled(LogLevel.Debug))
         {
@@ -91,12 +85,10 @@ public class ExternalController : Controller
         // lookup our user and external provider info
         var (user, provider, providerUserId, claims) = await FindUserFromExternalProviderAsync(result);
         if (user == null)
-        {
             // this might be where you might initiate a custom workflow for user registration
             // in this sample we don't show how that would be done, as our sample implementation
             // simply auto-provisions new external user
             user = await AutoProvisionUserAsync(provider, providerUserId, claims);
-        }
 
         // this allows us to collect any additional claims or properties
         // for the specific protocols used and store them in the local auth cookie.
@@ -104,14 +96,14 @@ public class ExternalController : Controller
         var additionalLocalClaims = new List<Claim>();
         var localSignInProps = new AuthenticationProperties();
         ProcessLoginCallback(result, additionalLocalClaims, localSignInProps);
-            
+
         // issue authentication cookie for user
         // we must issue the cookie maually, and can't use the SignInManager because
         // it doesn't expose an API to issue additional claims from the login workflow
         var principal = await _signInManager.CreateUserPrincipalAsync(user);
         additionalLocalClaims.AddRange(principal.Claims);
         var name = principal.FindFirst(JwtClaimTypes.Name)?.Value ?? user.Id;
-            
+
         var isuser = new IdentityServerUser(user.Id)
         {
             DisplayName = name,
@@ -129,17 +121,14 @@ public class ExternalController : Controller
 
         // check if external login is in the context of an OIDC request
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-        await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id, name, true, context?.Client.ClientId));
+        await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id, name, true,
+            context?.Client.ClientId));
 
         if (context != null)
-        {
             if (context.IsNativeClient())
-            {
                 // The client is native, so this change in how to
                 // return the response is for better UX for the end user.
                 return this.LoadingPage("Redirect", returnUrl);
-            }
-        }
 
         return Redirect(returnUrl);
     }
@@ -169,7 +158,8 @@ public class ExternalController : Controller
         return (user, provider, providerUserId, claims);
     }
 
-    private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
+    private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId,
+        IEnumerable<Claim> claims)
     {
         // create a list of claims that we want to transfer into our store
         var filtered = new List<Claim>();
@@ -188,30 +178,20 @@ public class ExternalController : Controller
             var last = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.FamilyName)?.Value ??
                        claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
             if (first != null && last != null)
-            {
                 filtered.Add(new Claim(JwtClaimTypes.Name, first + " " + last));
-            }
             else if (first != null)
-            {
                 filtered.Add(new Claim(JwtClaimTypes.Name, first));
-            }
-            else if (last != null)
-            {
-                filtered.Add(new Claim(JwtClaimTypes.Name, last));
-            }
+            else if (last != null) filtered.Add(new Claim(JwtClaimTypes.Name, last));
         }
 
         // email
         var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
                     claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-        if (email != null)
-        {
-            filtered.Add(new Claim(JwtClaimTypes.Email, email));
-        }
+        if (email != null) filtered.Add(new Claim(JwtClaimTypes.Email, email));
 
         var user = new ApplicationUser
         {
-            UserName = Guid.NewGuid().ToString(),
+            UserName = Guid.NewGuid().ToString()
         };
         var identityResult = await _userManager.CreateAsync(user);
         if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
@@ -230,21 +210,17 @@ public class ExternalController : Controller
 
     // if the external login is OIDC-based, there are certain things we need to preserve to make logout work
     // this will be different for WS-Fed, SAML2p or other protocols
-    private void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
+    private void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims,
+        AuthenticationProperties localSignInProps)
     {
         // if the external system sent a session id claim, copy it over
         // so we can use it for single sign-out
         var sid = externalResult.Principal.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.SessionId);
-        if (sid != null)
-        {
-            localClaims.Add(new Claim(JwtClaimTypes.SessionId, sid.Value));
-        }
+        if (sid != null) localClaims.Add(new Claim(JwtClaimTypes.SessionId, sid.Value));
 
         // if the external provider issued an id_token, we'll keep it for signout
         var idToken = externalResult.Properties.GetTokenValue("id_token");
         if (idToken != null)
-        {
             localSignInProps.StoreTokens(new[] { new AuthenticationToken { Name = "id_token", Value = idToken } });
-        }
     }
 }

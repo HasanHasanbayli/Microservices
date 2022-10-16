@@ -46,7 +46,7 @@ public class OrderController : Controller
         // return RedirectToAction(nameof(SuccessfulCheckout), new {orderId = orderStatus.OrderId});
 
         // 2st way asynchronous communication
-        return RedirectToAction(nameof(SuccessfulCheckout), new {orderId = new Random().Next(1, 1000)});
+        return RedirectToAction(nameof(SuccessfulCheckout), new { orderId = new Random().Next(1, 1000) });
     }
 
     public async Task<IActionResult> SuccessfulCheckout(int orderId)
@@ -55,7 +55,7 @@ public class OrderController : Controller
 
         return View();
     }
-    
+
     public async Task<IActionResult> CheckoutHistory()
     {
         return View(await _orderService.GetOrder());

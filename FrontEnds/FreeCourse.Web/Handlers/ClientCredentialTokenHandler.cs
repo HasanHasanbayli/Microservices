@@ -22,10 +22,7 @@ public class ClientCredentialTokenHandler : DelegatingHandler
 
         var response = await base.SendAsync(request, cancellationToken);
 
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            throw new UnAuthorizeException();
-        }
+        if (response.StatusCode == HttpStatusCode.Unauthorized) throw new UnAuthorizeException();
 
         return response;
     }

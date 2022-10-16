@@ -8,8 +8,5 @@ public class BasketDto
 
     public List<BasketItemDto>? BasketItem { get; set; }
 
-    public decimal TotalPrice
-    {
-        get => BasketItem.Sum(x => x.Price * x.Quantity);
-    }
+    public decimal TotalPrice => BasketItem.Sum(x => x.Price * x.Quantity);
 }

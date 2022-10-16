@@ -23,20 +23,14 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> SignIn(LoginRequest loginRequest)
     {
-        if (!ModelState.IsValid)
-        {
-            return View();
-        }
+        if (!ModelState.IsValid) return View();
 
         var response = await _identityService.SignIn(loginRequest);
 
         if (response.IsSuccessful)
             return RedirectToAction(nameof(HomeController.Index), "Home");
 
-        response.Errors.ForEach(error =>
-        {
-            ModelState.AddModelError(String.Empty, error);
-        });
+        response.Errors.ForEach(error => { ModelState.AddModelError(string.Empty, error); });
 
         return View();
     }

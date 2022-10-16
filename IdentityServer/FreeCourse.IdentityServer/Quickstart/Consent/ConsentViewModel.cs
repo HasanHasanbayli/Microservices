@@ -1,5 +1,4 @@
-﻿
-namespace FreeCourse.IdentityServer.Quickstart.Consent;
+﻿namespace FreeCourse.IdentityServer.Quickstart.Consent;
 
 public class ConsentViewModel : ConsentInputModel
 {

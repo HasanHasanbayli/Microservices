@@ -9,8 +9,8 @@ using FreeCourse.Web.Services.Interfaces;
 using FreeCourse.Web.Validators;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-IServiceCollection services = builder.Services;
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 services.AddControllersWithViews().AddFluentValidation(fv =>
@@ -41,7 +41,7 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).Ad
         options.Cookie.Name = "udemywebcookie";
     });
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {

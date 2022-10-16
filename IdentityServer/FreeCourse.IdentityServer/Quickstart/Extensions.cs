@@ -7,7 +7,7 @@ namespace FreeCourse.IdentityServer.Quickstart;
 public static class Extensions
 {
     /// <summary>
-    /// Checks if the redirect URI is for a native client.
+    ///     Checks if the redirect URI is for a native client.
     /// </summary>
     /// <returns></returns>
     public static bool IsNativeClient(this AuthorizationRequest context)
@@ -21,6 +21,6 @@ public static class Extensions
         controller.HttpContext.Response.StatusCode = 200;
         controller.HttpContext.Response.Headers["Location"] = "";
 
-        return controller.View(viewName, new RedirectViewModel {RedirectUrl = redirectUri});
+        return controller.View(viewName, new RedirectViewModel { RedirectUrl = redirectUri });
     }
 }

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-IServiceCollection services = builder.Services;
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
@@ -40,16 +40,13 @@ services.AddSingleton(sp =>
     return redis;
 });
 
-services.AddControllers(options =>
-{
-    options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
-});
+services.AddControllers(options => { options.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy)); });
 
 services.AddEndpointsApiExplorer();
 
 services.AddSwaggerGen();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-IServiceCollection services = builder.Services;
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 IConfiguration configuration = builder.Configuration;
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -50,7 +50,7 @@ services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"
 services.AddSingleton<IDataBaseSettings>(sp =>
     sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -72,8 +72,8 @@ using (var scope = app.Services.CreateScope())
 
     if (!categoryService.GetAllAsync().Result.Data.Any())
     {
-        categoryService.CreateAsync(new CategoryCreateDTO {Name = "Asp.net Core Course"}).Wait();
-        categoryService.CreateAsync(new CategoryCreateDTO {Name = "Asp.net Core Web API Course"}).Wait();
+        categoryService.CreateAsync(new CategoryCreateDTO { Name = "Asp.net Core Course" }).Wait();
+        categoryService.CreateAsync(new CategoryCreateDTO { Name = "Asp.net Core Web API Course" }).Wait();
     }
 }
 

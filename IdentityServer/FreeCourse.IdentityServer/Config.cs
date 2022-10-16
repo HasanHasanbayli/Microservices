@@ -8,13 +8,13 @@ public static class Config
     public static IEnumerable<ApiResource> ApiResources =>
         new[]
         {
-            new ApiResource("resource_catalog") {Scopes = {"catalog_full_permission"}},
-            new ApiResource("resource_photo_stock") {Scopes = {"photo_stock_full_permission"}},
-            new ApiResource("resource_basket") {Scopes = {"basket_full_permission"}},
-            new ApiResource("resource_discount") {Scopes = {"discount_full_permission"}},
-            new ApiResource("resource_order") {Scopes = {"order_full_permission"}},
-            new ApiResource("resource_payment") {Scopes = {"payment_full_permission"}},
-            new ApiResource("resource_gateway") {Scopes = {"gateway_full_permission"}},
+            new ApiResource("resource_catalog") { Scopes = { "catalog_full_permission" } },
+            new ApiResource("resource_photo_stock") { Scopes = { "photo_stock_full_permission" } },
+            new ApiResource("resource_basket") { Scopes = { "basket_full_permission" } },
+            new ApiResource("resource_discount") { Scopes = { "discount_full_permission" } },
+            new ApiResource("resource_order") { Scopes = { "order_full_permission" } },
+            new ApiResource("resource_payment") { Scopes = { "payment_full_permission" } },
+            new ApiResource("resource_gateway") { Scopes = { "gateway_full_permission" } },
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -25,7 +25,7 @@ public static class Config
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new()
-                {Name = "roles", DisplayName = "Roles", Description = "User roles", UserClaims = new[] {"role"}}
+                { Name = "roles", DisplayName = "Roles", Description = "User roles", UserClaims = new[] { "role" } }
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -48,7 +48,7 @@ public static class Config
             {
                 ClientName = "Asp.Net Core MVC",
                 ClientId = "WebMvcClient",
-                ClientSecrets = {new Secret("secret".Sha256())},
+                ClientSecrets = { new Secret("secret".Sha256()) },
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AllowedScopes =
                 {
@@ -64,7 +64,7 @@ public static class Config
                 ClientName = "Asp.Net Core MVC",
                 ClientId = "WebMvcClientForUser",
                 AllowOfflineAccess = true,
-                ClientSecrets = {new Secret("secret".Sha256())},
+                ClientSecrets = { new Secret("secret".Sha256()) },
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 AllowedScopes =
                 {
@@ -82,7 +82,7 @@ public static class Config
                 },
                 AccessTokenLifetime = 1 * 60 * 60,
                 RefreshTokenExpiration = TokenExpiration.Absolute,
-                AbsoluteRefreshTokenLifetime = (int) (DateTime.Now.AddDays(60) - DateTime.Now).TotalSeconds,
+                AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60) - DateTime.Now).TotalSeconds,
                 RefreshTokenUsage = TokenUsage.ReUse
             }
         };

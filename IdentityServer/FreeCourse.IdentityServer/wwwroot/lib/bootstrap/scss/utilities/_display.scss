@@ -9,7 +9,9 @@
     $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
     @each $value in $displays {
-      .d#{$infix}-#{$value} { display: $value !important; }
+      .d#{$infix}-#{$value} {
+        display: $value !important;
+      }
     }
   }
 }
@@ -21,6 +23,8 @@
 
 @media print {
   @each $value in $displays {
-    .d-print-#{$value} { display: $value !important; }
+    .d-print-#{$value} {
+      display: $value !important;
+    }
   }
 }

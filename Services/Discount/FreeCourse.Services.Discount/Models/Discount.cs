@@ -1,6 +1,8 @@
+using Dapper.Contrib.Extensions;
+
 namespace FreeCourse.Services.Discount.Models;
 
-[Dapper.Contrib.Extensions.Table("discount")]
+[Table("discount")]
 public class Discount
 {
     public int Id { get; set; }

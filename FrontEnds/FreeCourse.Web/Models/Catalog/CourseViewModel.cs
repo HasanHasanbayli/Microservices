@@ -1,5 +1,3 @@
-using System;
-
 namespace FreeCourse.Web.Models.Catalog;
 
 public class CourseViewModel

@@ -6,7 +6,7 @@ public class CreateOrderMessageCommand
     {
         OrderItems = new List<OrderItem>();
     }
-    
+
     public string BuyerId { get; set; }
 
     public List<OrderItem> OrderItems { get; set; }
