@@ -104,7 +104,7 @@ services:
       - "5012:80"
     volumes:
       - type: bind
-        source: C:\Users\h.hasanbayli\Pictures\UdemyMicroservicesPhotos
+        source: /Users/hasanhasanbayli/Pictures/MicroServicesPhotos
         target: /app/wwwroot/photos
   discount.api:
     container_name: discount.api
