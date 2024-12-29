@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0"/>
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsAspireHost>true</IsAspireHost>
+        <UserSecretsId>c06ad273-3375-4ff1-8d1b-1f8f3288b00a</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0"/>
+        <PackageReference Include="Aspire.Hosting.MongoDB" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
+        <PackageReference Include="Aspire.StackExchange.Redis" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\FreeCourse.Gateway\FreeCourse.Gateway.csproj" />
+      <ProjectReference Include="..\..\FrontEnds\FreeCourse.Web\FreeCourse.Web.csproj" />
+      <ProjectReference Include="..\..\IdentityServer\FreeCourse.IdentityServer\FreeCourse.IdentityServer.csproj" />
+      <ProjectReference Include="..\..\Services\Basket\FreeCourse.Services.Basket\FreeCourse.Services.Basket.csproj" />
+      <ProjectReference Include="..\..\Services\Catalog\FreeCourse.Services.Catalog\FreeCourse.Services.Catalog.csproj" />
+      <ProjectReference Include="..\..\Services\Discount\FreeCourse.Services.Discount\FreeCourse.Services.Discount.csproj" />
+      <ProjectReference Include="..\..\Services\FakePayment\FreeCourse.Services.FakePayment\FreeCourse.Services.FakePayment.csproj" />
+      <ProjectReference Include="..\..\Services\Order\FreeCourse.Services.Order\FreeCourse.Services.Order.csproj" />
+      <ProjectReference Include="..\..\Services\PhotoStock\FreeCourse.Services.PhotoStock\FreeCourse.Services.PhotoStock.csproj" />
+    </ItemGroup>
+
+</Project>
